@@ -2,6 +2,7 @@
 using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 namespace MousePointerCaption
@@ -76,5 +77,24 @@ namespace MousePointerCaption
         {
             return Math.Abs(arg1 - arg2) < REAL_MIN_PRECISION_FOR_EQUALS;
         }
-    }
+
+        public static void RemoveFromSuperview(this FrameworkElement elem, FrameworkElement superview)
+        {
+	        if (elem == null)
+		        return;
+	        if (superview == null)
+		        superview = elem.Parent as FrameworkElement;
+	        switch (superview)
+	        {
+		        case Panel parent:
+			        parent.Children.Remove(elem);
+			        break;
+		        case ContentControl cc:
+			        cc.Content = null;
+			        break;
+		        default:
+			        break;
+	        }
+        }
+	}
 }

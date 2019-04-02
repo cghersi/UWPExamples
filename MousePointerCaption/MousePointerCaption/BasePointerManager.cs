@@ -130,7 +130,7 @@ namespace MousePointerCaption
             EventCount++;
 
             // perform the required action:
-            OnPointerMovedDelegate(dragVector, senderElem, curContentPoint);
+            OnPointerMovedDelegate(dragVector, senderElem, curContentPoint, e.Pointer);
 
             // update the position of the element as the user drags it.
             m_origContentPointerDownPoint = curContentPoint;
@@ -164,8 +164,10 @@ namespace MousePointerCaption
         /// <param name="dragVector">the differential value between the last recorded position and the current one</param>
         /// <param name="sender">target element of the event</param>
         /// <param name="currentPoint">the point where happened the pointer hit</param>
+        /// <param name="currentPointer"></param>
         /// <returns>true if the action should be stopped now (no further needs for actions in the parent)</returns>
-        protected virtual bool OnPointerMovedDelegate(Point dragVector, FrameworkElement sender, Point currentPoint)
+        protected virtual bool OnPointerMovedDelegate(Point dragVector, FrameworkElement sender, Point currentPoint, 
+	        Pointer currentPointer)
         {
             // nothing to do here...
             return false;
