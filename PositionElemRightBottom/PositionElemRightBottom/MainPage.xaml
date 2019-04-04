@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="PositionElemRightBottom.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PositionElemRightBottom"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <RelativePanel Name="Workspace">
+        <Button PointerPressed="PositionZoomAllBtn" Height="100" Width="200" Background="Aqua" 
+                Foreground="Black" Margin="20,20,20,20" Canvas.ZIndex="20">
+            Position ZoomOut Btn
+        </Button>
+    </RelativePanel>
+</Page>
