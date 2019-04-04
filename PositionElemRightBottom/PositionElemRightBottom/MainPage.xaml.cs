@@ -47,12 +47,6 @@ namespace PositionElemRightBottom
 			Background = new SolidColorBrush(Colors.Black),
 			Height = 100,
 			Width = 100,
-
-			// with this margin and alignment, I expect to position the button on the right bottom:
-			// actually this is not the appearance when we start the App!!
-			Margin = new Thickness(0, 0, 45, 45),
-			HorizontalAlignment = HorizontalAlignment.Right,
-			VerticalAlignment = VerticalAlignment.Bottom  
 		};
 
 		public MainPage()
@@ -69,14 +63,24 @@ namespace PositionElemRightBottom
 				ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/Anger.png", UriKind.RelativeOrAbsolute))
 			};
 			Workspace.Children.Add(m_scrollView);
-
+			Workspace.Children.Add(m_zoomAllButton);
 			m_zoomAllButton.Content = new Image()
 			{
 				Source = new BitmapImage(new Uri("ms-appx:///Assets/zoomout_teal_1.png", UriKind.RelativeOrAbsolute))
 			};
 			m_zoomAllButton.PointerPressed += ZoomoutButtonAction;
 			m_zoomAllButton.SetValue(Canvas.ZIndexProperty, 100);
-			Workspace.Children.Add(m_zoomAllButton);
+
+			// with this margin and alignment, I expect to position the button on the right bottom:
+			m_zoomAllButton.Margin = new Thickness(0, 0, 45, 45);
+
+			// if we use XXAlignment, this is not the appearance when we start the App!!
+			//HorizontalAlignment = HorizontalAlignment.Right,
+			//VerticalAlignment = VerticalAlignment.Bottom  
+
+			// instead, this makes the trick of aligning:
+			RelativePanel.SetAlignRightWithPanel(m_zoomAllButton, true);
+			RelativePanel.SetAlignBottomWithPanel(m_zoomAllButton, true);
 		}
 
 		private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
