@@ -45,11 +45,14 @@ namespace PositionElemRightBottom
 		{
 			Name = "ZoomBtn",
 			Background = new SolidColorBrush(Colors.Black),
+			Height = 100,
+			Width = 100,
+
+			// with this margin and alignment, I expect to position the button on the right bottom:
+			// actually this is not the appearance when we start the App!!
 			Margin = new Thickness(0, 0, 45, 45),
 			HorizontalAlignment = HorizontalAlignment.Right,
-			VerticalAlignment = VerticalAlignment.Bottom,
-			Height = 100,  
-			Width = 100    
+			VerticalAlignment = VerticalAlignment.Bottom  
 		};
 
 		public MainPage()
@@ -96,12 +99,13 @@ namespace PositionElemRightBottom
 
 		private void PositionZoomAllBtn(object sender, PointerRoutedEventArgs e)
 		{
-			// Position the zoom-all button:
+			// Position the zoom-all button in an absolute way:
 			double width = Workspace.ActualWidth;
 			if (IsValidSize(width)) // make sure we actually have a valid size
 			{
 				double height = Workspace.ActualHeight;
-				m_zoomAllButton.Margin = new Thickness(width - 45, height - 45, 0, 0);
+				m_zoomAllButton.Margin = new Thickness(width - m_zoomAllButton.Width - 10, 
+					height - m_zoomAllButton.Height - 10, 0, 0);
 			}
 		}
 

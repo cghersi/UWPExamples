@@ -9,9 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <RelativePanel Name="Workspace">
-        <Button PointerPressed="PositionZoomAllBtn" Height="100" Width="200" Background="Aqua" 
-                Foreground="Black" Margin="20,20,20,20" Canvas.ZIndex="20">
-            Position ZoomOut Btn
+        <Button PointerPressed="PositionZoomAllBtn" Height="100" Width="400" Background="Aqua" 
+                Foreground="Black" Margin="20,200,20,20" Canvas.ZIndex="20">
+            Position ZoomOutBtn in an Absolute way
         </Button>
     </RelativePanel>
 </Page>
