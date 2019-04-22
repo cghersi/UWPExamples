@@ -77,6 +77,10 @@ namespace RenderTransformAnimation
 		{
 			if (isAnimated)
 			{
+				LTAnimate(m_zoomViewTransform.TranslateX, newOffset.X, 200, v => m_zoomViewTransform.TranslateX = v);
+				LTAnimate(m_zoomViewTransform.TranslateY, newOffset.Y, 200, v => m_zoomViewTransform.TranslateY = v);
+
+				/*
 				TimeSpan dur = TimeSpan.FromSeconds(0.2);
 				Storyboard sb = new Storyboard { Duration = dur };
 				DoubleAnimation animationX = new DoubleAnimation
@@ -109,12 +113,45 @@ namespace RenderTransformAnimation
 					m_zoomViewTransform.TranslateX = newOffset.X;
 					m_zoomViewTransform.TranslateY = newOffset.Y;
 				};
+				*/
+
 			}
 			else
 			{
 				m_zoomViewTransform.TranslateX = newOffset.X;
 				m_zoomViewTransform.TranslateY = newOffset.Y;
 			}
+		}
+
+		private const int ANIMATION_TICK = 10; // in milliseconds
+
+		private void LTAnimate(double initialValue, double finalValue, int durationInMillis, Action<double> updater, Action whenDone = null)
+		{
+			// compute the number of executions of the updater action:
+			double delta = finalValue - initialValue;
+			int execNum = durationInMillis / ANIMATION_TICK;
+			DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(ANIMATION_TICK) };
+			int execCount = 0;
+			timer.Tick += (sender, o) =>
+			{
+				// execute the action of the animation:
+				updater(initialValue + (delta * execCount) / execNum);
+
+				// check if we are done with the animation:
+				if (++execCount >= execNum)
+				{
+					// we are done: 
+					// 1) make sure we set the very final value:
+					updater(finalValue);
+
+					// 2) execute the whenDone action, if any:
+					whenDone?.Invoke();
+
+					// 3) stop the timer:
+					timer.Stop();
+				}
+			};
+			timer.Start();
 		}
 
 		private void UIElement_OnPointerPressed(object sender, PointerRoutedEventArgs e)
