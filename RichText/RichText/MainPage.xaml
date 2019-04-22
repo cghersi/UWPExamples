@@ -6,8 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontFamily="Segoe UI">
 
     <RelativePanel Name="MainPanel">
+        <RichTextBlock FontFamily="Segoe UI" Margin="300,400,0,0" Width="180">
+            <Paragraph FontFamily="Segoe Script">
+                <Run FontFamily="Segoe UI" FontSize="20">
+                    Excerpt1 InkLink
+                </Run>
+            </Paragraph>
+        </RichTextBlock>
+
+        <TextBlock FontFamily="Palatino-Roman"></TextBlock>
     </RelativePanel>
 </Page>

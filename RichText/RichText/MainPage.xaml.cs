@@ -18,7 +18,7 @@ namespace RichText
 	/// </summary>
 	public sealed partial class MainPage
 	{
-		public static readonly FontFamily FONT_FAMILY = new FontFamily("Palatino-Roman");
+		public static readonly FontFamily FONT_FAMILY = new FontFamily("Assets/paltn.ttf#Palatino-Roman");
 		public const int FONT_SIZE = 10;
 		private readonly Dictionary<string, object> FONT = new Dictionary<string, object>
 		{
@@ -55,7 +55,7 @@ namespace RichText
 			// add to the main panel:
 			MainPanel.Children.Add(m_displayedText);
 
-			// compute the text height:
+			// compute the text height: (this gives the wrong answer!!):
 			double textH = GetRichTextHeight(content, (float)m_displayedText.Width);
 			Console.WriteLine("text height: {0}", textH);
 		}
@@ -77,7 +77,7 @@ namespace RichText
 					WordWrapping = CanvasWordWrapping.Wrap
 				};
 				CanvasTextLayout layout = new CanvasTextLayout(device, textToken.Text, frmt, maxWidth, 0f);
-				finalH += layout.DrawBounds.Height;
+				finalH += layout.LayoutBounds.Height;
 			}
 
 			return finalH;
@@ -95,7 +95,7 @@ namespace RichText
 				Paragraph paragraph = new Paragraph()
 				{
 					TextAlignment = token.Get(AttrString.TEXT_ALIGN_KEY, TextAlignment.Left),
-					TextIndent = token.Get(AttrString.LINE_HEAD_INDENT_KEY, 0),
+					//TextIndent = token.Get(AttrString.LINE_HEAD_INDENT_KEY, 0),
 				};
 				double fontSize = token.Get(AttrString.FONT_SIZE_KEY, FONT_SIZE);
 				double lineSpacing = token.Get(AttrString.LINE_SPACING_KEY, 1.0);
