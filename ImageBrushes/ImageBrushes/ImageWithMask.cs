@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -10,7 +11,7 @@ namespace ImageBrushes
 {
 	public class ImageWithMask
 	{
-		private Shape m_renderImage;
+		private Path m_renderImage;
 		private readonly Panel m_parent;
 		private Uri m_imageUri;
 
@@ -20,9 +21,9 @@ namespace ImageBrushes
 			CurrentSize = desiredSize;
 		}
 
-		public Size CurrentSize { get; }
+		public Size CurrentSize { get; set; }
 
-		public Path MaskPath => m_renderImage as Path;
+		public Path MaskPath => m_renderImage;
 
 		public void SetImage(Uri imageUri)
 		{
@@ -32,16 +33,25 @@ namespace ImageBrushes
 
 			m_renderImage.Width = CurrentSize.Width;
 			m_renderImage.Height = CurrentSize.Height;
-			RefreshImage();
-		}
-
-		public void RefreshImage()
-		{
 			m_renderImage.Fill = new ImageBrush
 			{
 				ImageSource = new BitmapImage(m_imageUri),
 				Stretch = Stretch.Fill
 			};
+		}
+
+		public void Resize(double newW, double newH)
+		{
+			CurrentSize = new Size(Math.Max(20, CurrentSize.Width + newW), 
+				Math.Max(20, CurrentSize.Height + newH));
+			m_renderImage.Width = CurrentSize.Width;
+			m_renderImage.Height = CurrentSize.Height;
+			PathFigure pathFigure = (m_renderImage.Data as PathGeometry)?.Figures.FirstOrDefault();
+			if (pathFigure != null)
+			{
+				pathFigure.Segments.Clear();
+				RefreshShape(pathFigure, CurrentSize);
+			}
 		}
 
 		public static void SetMargin(FrameworkElement panel, double? left, double? top)
@@ -58,9 +68,6 @@ namespace ImageBrushes
 
 		private static Path BuildRectPath(Size size)
 		{
-			double contW = size.Width;
-			double contH = size.Height;
-
 			PathGeometry pGeom = new PathGeometry();
 			PathFigure pathFigure = new PathFigure
 			{
@@ -68,13 +75,21 @@ namespace ImageBrushes
 				IsClosed = true
 			};
 
+			RefreshShape(pathFigure, size);
+
+			pGeom.Figures.Add(pathFigure);
+			return new Path { Data = pGeom };
+		}
+
+		private static void RefreshShape(PathFigure pathFigure, Size size)
+		{
+			double contW = size.Width;
+			double contH = size.Height;
+
 			// Add the points to the path:
 			pathFigure.Segments.Add(new LineSegment { Point = new Point(contW, 0) });
 			pathFigure.Segments.Add(new LineSegment { Point = new Point(contW, contH) });
 			pathFigure.Segments.Add(new LineSegment { Point = new Point(0, contH) });
-
-			pGeom.Figures.Add(pathFigure);
-			return new Path { Data = pGeom };
 		}
 	}
 }

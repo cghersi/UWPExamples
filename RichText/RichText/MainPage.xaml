@@ -9,14 +9,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontFamily="Segoe UI">
 
     <RelativePanel Name="MainPanel">
-        <RichTextBlock FontFamily="Segoe UI" Margin="300,400,0,0" Width="180">
-            <Paragraph FontFamily="Segoe Script">
-                <Run FontFamily="Segoe UI" FontSize="20">
-                    Excerpt1 InkLink
-                </Run>
-            </Paragraph>
-        </RichTextBlock>
+        <RelativePanel Name="TextView" Margin="200,50,0,0" Height="50">
+            <RichEditBox Background="Bisque" Name="TestBox" BorderBrush="BlueViolet" BorderThickness="4" 
+                         LayoutUpdated="TestBox_OnLayoutUpdated" SizeChanged="TestBox_OnSizeChanged">
+            </RichEditBox>
+        </RelativePanel>
 
-        <TextBlock FontFamily="Palatino-Roman"></TextBlock>
+
+        <RelativePanel Name="Comparison" Margin="400,50,0,0">
+            <RichEditBox Background="Bisque" Name="ContentInBox" Height="150" Width="200" />
+            <RichTextBlock Name="ContentInBlock" Height="150" Width="200" Margin="0,200,0,0"  />
+            <TextBox Name="ContentInSimpleBox" Background="Aqua" Height="150" Width="200" Margin="0,400,0,0" />
+        </RelativePanel>
     </RelativePanel>
 </Page>

@@ -94,8 +94,9 @@ namespace ImageBrushes
 			Point dragVector = Subtract(m_origContentPointerDownPoint, curContentPoint);
 
 			// resize:
-			m_image.MaskPath.Width += dragVector.X;
-			m_image.MaskPath.Height += dragVector.Y;
+			//m_image.MaskPath.Width += dragVector.X;
+			//m_image.MaskPath.Height += dragVector.Y;
+			m_image.Resize(dragVector.X, dragVector.Y);
 			//m_image.RefreshImage(); //this makes the image flickering (and anyway doesn't resize!!)
 
 			// update the position of the element as the user drags it.

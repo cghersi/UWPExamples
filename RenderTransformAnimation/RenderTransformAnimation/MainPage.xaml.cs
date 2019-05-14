@@ -77,10 +77,9 @@ namespace RenderTransformAnimation
 		{
 			if (isAnimated)
 			{
-				LTAnimate(m_zoomViewTransform.TranslateX, newOffset.X, 200, v => m_zoomViewTransform.TranslateX = v);
-				LTAnimate(m_zoomViewTransform.TranslateY, newOffset.Y, 200, v => m_zoomViewTransform.TranslateY = v);
+				//LTAnimate(m_zoomViewTransform.TranslateX, newOffset.X, 200, v => m_zoomViewTransform.TranslateX = v);
+				//LTAnimate(m_zoomViewTransform.TranslateY, newOffset.Y, 200, v => m_zoomViewTransform.TranslateY = v);
 
-				/*
 				TimeSpan dur = TimeSpan.FromSeconds(0.2);
 				Storyboard sb = new Storyboard { Duration = dur };
 				DoubleAnimation animationX = new DoubleAnimation
@@ -107,13 +106,14 @@ namespace RenderTransformAnimation
 				//Storyboard.SetTargetProperty(animationX, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
 				//Storyboard.SetTargetProperty(animationY, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
 
-				sb.Begin();
 				sb.Completed += (sender, o) =>
 				{
+					sb.Stop();
 					m_zoomViewTransform.TranslateX = newOffset.X;
 					m_zoomViewTransform.TranslateY = newOffset.Y;
 				};
-				*/
+
+				sb.Begin();
 
 			}
 			else
