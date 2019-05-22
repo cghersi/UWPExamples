@@ -9,6 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <RelativePanel Name="Workspace">
-
+        <Button Name="MovePanel" Margin="20,20,0,0" Click="MovePanel_OnClick">Move</Button>
+        <Button Name="ExpandPanel" Margin="20,60,0,0" Click="ExpandPanel_OnClick">Expand</Button>
+        <Button Name="ComplexMove" Margin="20,100,0,0" Click="ComplexMove_OnClick">Complex</Button>
     </RelativePanel>
 </Page>

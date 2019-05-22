@@ -1,9 +1,12 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 
 namespace ExtendIOSConcepts
 {
 	public static class UWPUtils
 	{
+		public const double REAL_MIN_PRECISION_FOR_EQUALS = 0.0000001F;
+
 		/// <summary>
 		/// Sets the Margin for the given element.
 		/// </summary>
@@ -54,6 +57,58 @@ namespace ExtendIOSConcepts
 
 			if (height.HasValue && (height >= 0))
 				panel.Height = height.Value;
+		}
+
+		/// <summary>
+		/// Returns true if the two inputs differ for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg1"></param>
+		/// <param name="arg2"></param>
+		/// <returns></returns>
+		public static bool Equal(this double? arg1, double? arg2)
+		{
+			if (arg1 == null)
+				return (arg2 == null);
+			if (arg2 == null)
+				return false;
+			return Math.Abs(arg1.Value - arg2.Value) < REAL_MIN_PRECISION_FOR_EQUALS;
+		}
+
+		/// <summary>
+		/// Returns true if the two inputs differ for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg1"></param>
+		/// <param name="arg2"></param>
+		/// <returns></returns>
+		public static bool Equal(this float? arg1, float? arg2)
+		{
+			if (arg1 == null)
+				return (arg2 == null);
+			if (arg2 == null)
+				return false;
+			return Math.Abs(arg1.Value - arg2.Value) < REAL_MIN_PRECISION_FOR_EQUALS;
+		}
+
+		/// <summary>
+		/// Returns true if the two inputs differ for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg1"></param>
+		/// <param name="arg2"></param>
+		/// <returns></returns>
+		public static bool Equal(this double arg1, double arg2)
+		{
+			return Math.Abs(arg1 - arg2) < REAL_MIN_PRECISION_FOR_EQUALS;
+		}
+
+		/// <summary>
+		/// Returns true if the two inputs differ for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg1"></param>
+		/// <param name="arg2"></param>
+		/// <returns></returns>
+		public static bool Equal(this float arg1, float arg2)
+		{
+			return Math.Abs(arg1 - arg2) < REAL_MIN_PRECISION_FOR_EQUALS;
 		}
 	}
 }

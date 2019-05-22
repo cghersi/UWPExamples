@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Canvas Name="Workspace" Background="AntiqueWhite">
-
+        <Button Name="Test" Click="Test_OnClick" Margin="10,10,0,0">Measure</Button>
     </Canvas>
 </Page>

@@ -8,6 +8,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Text;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -20,6 +22,7 @@ namespace MeasureText
 	{
 		private RichTextBlock m_textBlock;
 		private RichTextBlock m_textBlock2;
+		private RichTextBlock m_textBlock3;
 
 		public static readonly FontFamily FONT_FAMILY = new FontFamily("Assets/paltn.ttf#Palatino-Roman");
 		public const int FONT_SIZE = 10;
@@ -28,13 +31,39 @@ namespace MeasureText
 		private static readonly Color FONT_FOREGROUND_COLOR = Color.FromArgb(255, 59, 52, 26);
 		public static readonly SolidColorBrush FONT_FOREGROUND = new SolidColorBrush(FONT_FOREGROUND_COLOR);
 
+		private static AttrString content = new AttrString(
+			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+			AttrString.DefaultCitationFont);
 
 		public MainPage()
 		{
 			this.InitializeComponent();
 
 			CreateTextBlockLimitedMeasureWidth();
-			CreateTextBlockLimitedMeasureWidth();
+			CreateTextBlockLimitedElementWidth();
+			CreateTextAndMeasure();
+		}
+
+		private void CreateTextAndMeasure()
+		{
+			m_textBlock3 = new RichTextBlock()
+			{
+				FontFamily = FONT_FAMILY,
+				FontSize = FONT_SIZE,
+				TextWrapping = TextWrapping.Wrap,
+				Foreground = FONT_FOREGROUND,
+				MaxLines = 0, //Let it use as many lines as it wants
+				AllowFocusOnInteraction = false,
+				IsHitTestVisible = false,
+				Width = 200,
+				Height = 4000
+			};
+
+			m_textBlock3.Margin = new Thickness(100, 220, 0, 0);
+			m_textBlock3.SetRichText(content);
+
+			double h = m_textBlock3.GetElemHeight();
+			Workspace.Children.Add(m_textBlock3);
 		}
 
 		private void CreateTextBlockLimitedMeasureWidth()
@@ -50,11 +79,9 @@ namespace MeasureText
 				IsHitTestVisible = false
 			};
 
-			m_textBlock.Margin = new Thickness(200);
+			m_textBlock.Margin = new Thickness(20);
 
-			AttrString content = new AttrString(
-				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-				AttrString.DefaultCitationFont);
+
 			m_textBlock.SetRichText(content);
 
 			Stopwatch sw = Stopwatch.StartNew();
@@ -71,7 +98,13 @@ namespace MeasureText
 			sw.Stop();
 			double time2 = sw.Elapsed.TotalMilliseconds;
 
-			Debug.WriteLine("LimitedMeasureWidth: Size before adding text to scene: {0} - time to measure:{2}ms; after adding to scene: {1} - time to measure:{3}ms", size, size2, time, time2);
+			sw.Restart();
+			double h = content.GetRichTextHeight(300);
+			sw.Stop();
+			double time3 = sw.Elapsed.TotalMilliseconds;
+
+			Debug.WriteLine("LimitedMeasureWidth: Size before adding text to scene: {0} - time to measure:{2}ms; after adding to scene: {1} - time to measure:{3}ms - Win2D H:{4} in {5}ms", 
+				size, size2, time, time2, h, time3);
 		}
 
 		private void CreateTextBlockLimitedElementWidth()
@@ -87,7 +120,7 @@ namespace MeasureText
 				IsHitTestVisible = false
 			};
 
-			m_textBlock2.Margin = new Thickness(400);
+			m_textBlock2.Margin = new Thickness(40);
 			m_textBlock2.Width = 300;
 
 			AttrString content = new AttrString(
@@ -111,10 +144,66 @@ namespace MeasureText
 
 			Debug.WriteLine("LimitedElementWidth: Size before adding text to scene: {0} - time to measure:{2}ms; after adding to scene: {1} - time to measure:{3}ms", size, size2, time, time2);
 		}
+
+		private void Test_OnClick(object sender, RoutedEventArgs e)
+		{
+			Stopwatch sw = new Stopwatch();
+			double totTime = 0;
+			double maxTime = 0;
+			double totTimeWin2D = 0;
+			double maxTimeWin2D = 0;
+			for (int i = 0; i < 1000; i++)
+			{
+				Size sizeBefore = m_textBlock2.DesiredSize;
+				m_textBlock2.Width += 2;
+				sw.Restart();
+				Size sizeMiddle = m_textBlock2.DesiredSize;
+				m_textBlock2.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+				Size sizeAfter = m_textBlock2.DesiredSize;
+				sw.Stop();
+				double time = sw.Elapsed.TotalMilliseconds;
+				totTime += time;
+				if (maxTime < time)
+					maxTime = time;
+
+				sw.Restart();
+				double h = content.GetRichTextHeight(300);
+				sw.Stop();
+				double timeWin2D = sw.Elapsed.TotalMilliseconds;
+				totTimeWin2D += timeWin2D;
+				if (maxTimeWin2D < timeWin2D)
+					maxTimeWin2D = timeWin2D;
+
+				Debug.WriteLine("Test_OnClick: Size before changing width: {0}; Size after changing width: {1}; Size after measuring: {2} - time to measure:{3}ms - Win2D H:{4} in {5}ms", 
+					sizeBefore, sizeMiddle, sizeAfter, time, h, totTimeWin2D);
+			}
+
+			Debug.WriteLine("Test_OnClick: tot time: {0}ms; max time:{1}ms; Win2D: {2}ms - max {3}ms", totTime / 1000, maxTime, totTimeWin2D / 1000, maxTimeWin2D);
+		}
 	}
 
 	public static class TextUtils
 	{
+		/// <summary>
+		/// Computes the height of the given element, when the width is fixed
+		/// </summary>
+		/// <param name="elem"></param>
+		/// <param name="actualWidth">force the method to use the given width, rather than the element Width property</param>
+		/// <returns></returns>
+		public static double GetElemHeight(this FrameworkElement elem, double? actualWidth = null)
+		{
+			if (elem == null)
+				return 0;
+			double currentH = elem.Height;
+			if (!double.IsNaN(currentH))
+				elem.Height = double.NaN;
+			double totalW = (actualWidth ?? elem.Width) + elem.Margin.Left + elem.Margin.Right;
+			elem.Measure(new Size(totalW, double.PositiveInfinity));
+			Size size = elem.DesiredSize;
+			elem.Height = currentH;
+			return size.Height - elem.Margin.Top - elem.Margin.Bottom;
+		}
+
 		public static void SetRichText(this RichTextBlock label, AttrString str)
 		{
 			if ((str == null) || (label == null))
@@ -154,6 +243,60 @@ namespace MeasureText
 				paragraph.Inlines.Add(run);
 				label.Blocks.Add(paragraph);
 			}
+		}
+
+		public static double GetRichTextHeight(this AttrString text, float maxWidth)
+		{
+			if (text == null)
+				return 0;
+
+			CanvasDevice device = CanvasDevice.GetSharedDevice();
+			double finalH = 0;
+			foreach (AttributedToken textToken in text.Tokens)
+			{
+				string content = textToken.Text;
+				// if we have indentation, we need to add some spaces to fill up this indent value... 
+
+				FontStyle style = textToken.Get(AttrString.FONT_STYLE_KEY, FontStyle.Normal);
+				string fontFamily = textToken.Get(AttrString.FONT_FAMILY_KEY, MainPage.FONT_FAMILY).Source;
+				float fontSize = textToken.Get(AttrString.FONT_SIZE_KEY, MainPage.FONT_SIZE);
+				float lineSpacing = textToken.Get(AttrString.LINE_SPACING_KEY, 1.0f);
+				int totChar = content.Length;
+				CanvasTextFormat frmt = new CanvasTextFormat()
+				{
+					Direction = CanvasTextDirection.LeftToRightThenTopToBottom,
+					FontFamily = fontFamily,
+					FontSize = fontSize,
+					FontStyle = style,
+					WordWrapping = CanvasWordWrapping.Wrap
+				};
+				CanvasTextLayout layout = new CanvasTextLayout(device, content, frmt, maxWidth, 0f)
+				{
+					HorizontalAlignment = TranslateHAlignment(textToken.Get(AttrString.TEXT_ALIGN_KEY, TextAlignment.Left))
+				};
+				layout.SetFontFamily(0, totChar, fontFamily);
+				layout.SetFontSize(0, totChar, fontSize);
+				layout.SetFontStyle(0, totChar, style);
+				layout.LineSpacing = lineSpacing;
+				layout.LineSpacingMode = CanvasLineSpacingMode.Proportional;
+
+				finalH += layout.LayoutBounds.Height;
+			}
+
+			return finalH;
+		}
+
+		private static CanvasHorizontalAlignment TranslateHAlignment(TextAlignment align)
+		{
+			switch (align)
+			{
+				case TextAlignment.Left: return CanvasHorizontalAlignment.Left;
+				case TextAlignment.Center: return CanvasHorizontalAlignment.Center;
+				case TextAlignment.Justify: return CanvasHorizontalAlignment.Justified;
+				case TextAlignment.Right: return CanvasHorizontalAlignment.Right;
+			}
+
+			return CanvasHorizontalAlignment.Left;
 		}
 	}
 

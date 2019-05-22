@@ -72,8 +72,11 @@ namespace ExtendIOSConcepts
 
 		public void RequestNewLayout()
 		{
-			LayoutSubviews();
-			View.InvalidateMeasure();
+			LayoutSubviews(new Size());
+			// Can't call InvalidateMeasure during Arrange, since this will cause a new Measure and Arrange pass.
+			// Calling it only if something truly changed can work, but is dangerous if the "something truly changed"
+			// is incorrectly determined to be true.
+			//View.InvalidateMeasure();
 		}
 
 		/// <summary>
@@ -84,7 +87,7 @@ namespace ExtendIOSConcepts
 			// nothing to do here, but can be overriden by children
 		}
 
-		public virtual void LayoutSubviews()
+		public virtual void LayoutSubviews(Size s)
 		{
 			// nothing to do here, but can be overriden by children
 		}
