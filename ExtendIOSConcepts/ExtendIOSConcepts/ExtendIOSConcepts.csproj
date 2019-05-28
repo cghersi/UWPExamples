@@ -124,6 +124,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyCustomView.cs" />
+    <Compile Include="PanningView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UWPUtils.cs" />
   </ItemGroup>

@@ -45,6 +45,8 @@ namespace ExtendIOSConcepts
 
 		public Rect Frame => new Rect(X, Y, Width, Height);
 
+		public Rect Bounds => new Rect(0, 0, Width, Height);
+
 		public Guid Id { get; protected set; }
 
 		public virtual double Width => View.Width;
@@ -72,7 +74,16 @@ namespace ExtendIOSConcepts
 
 		public void RequestNewLayout()
 		{
-			LayoutSubviews(new Size());
+			LayoutSubviews(new Size(Width, Height));
+			// Can't call InvalidateMeasure during Arrange, since this will cause a new Measure and Arrange pass.
+			// Calling it only if something truly changed can work, but is dangerous if the "something truly changed"
+			// is incorrectly determined to be true.
+			//View.InvalidateMeasure();
+		}
+
+		public void RequestNewLayout(Size size)
+		{
+			LayoutSubviews(size);
 			// Can't call InvalidateMeasure during Arrange, since this will cause a new Measure and Arrange pass.
 			// Calling it only if something truly changed can work, but is dangerous if the "something truly changed"
 			// is incorrectly determined to be true.

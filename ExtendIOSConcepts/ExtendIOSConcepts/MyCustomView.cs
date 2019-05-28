@@ -14,7 +14,7 @@ namespace ExtendIOSConcepts
 		private readonly BaseView m_panel3; 
 		private readonly BaseView m_panel4;
 
-		private int m_count = 0;
+		private static int s_count = 0;
 
 		public MyCustomView() : base(true)
 		{
@@ -31,7 +31,7 @@ namespace ExtendIOSConcepts
 			m_panel1.View.Background = new SolidColorBrush(Colors.Red);
 			View.Children.Add(m_panel1.View);
 			m_panel2 = new BaseView();
-			m_panel2.View.Background = new SolidColorBrush(Colors.Aqua);
+			m_panel2.View.Background = new SolidColorBrush(Colors.Green);
 			ShowPanel2(true);
 			m_panel3 = new BaseView();
 			m_panel3.View.Background = new SolidColorBrush(Colors.Yellow);
@@ -48,7 +48,7 @@ namespace ExtendIOSConcepts
 
 		public override void LayoutSubviews(Size s)
 		{
-			Debug.WriteLine("{1} - In LayoutSubviews with size {0}", s, m_count++);
+			Debug.WriteLine("{1} - In LayoutSubviews with size {0}", s, s_count++);
 
 			// Position the first panel:
 			//m_panel1.SetMargin(0, 0);
@@ -82,7 +82,7 @@ namespace ExtendIOSConcepts
 			m_panel2.View.Arrange(new Rect(containerToContent.Left, containerToContent.Top,
 				Math.Max(s.Width - containerToContent.Left - containerToContent.Right, 10),
 				Math.Max(10, lastKnownPanel2Height)));
-			ShowPanel2(lastKnownPanel2Height > 0.1);
+			//ShowPanel2(lastKnownPanel2Height > 0.1);
 
 			// Set the final height:
 			Rect rect = Frame; 

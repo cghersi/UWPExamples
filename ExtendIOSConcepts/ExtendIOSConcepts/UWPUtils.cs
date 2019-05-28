@@ -110,5 +110,40 @@ namespace ExtendIOSConcepts
 		{
 			return Math.Abs(arg1 - arg2) < REAL_MIN_PRECISION_FOR_EQUALS;
 		}
+
+		public static bool IsZero(this double arg)
+		{
+			return Equal(arg, 0);
+		}
+
+		/// <summary>
+		/// Returns true if the input differ from 0 for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns></returns>
+		public static bool IsZero(this float arg)
+		{
+			return Equal(arg, 0);
+		}
+
+		/// <summary>
+		/// Returns true if the input differ from 0 for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns></returns>
+		public static bool IsZero(this double? arg)
+		{
+			return !arg.HasValue || Equal(arg, 0);
+		}
+
+		/// <summary>
+		/// Returns true if the input differ from 0 for less than <see cref="REAL_MIN_PRECISION_FOR_EQUALS"/>.
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns></returns>
+		public static bool IsZero(this float? arg)
+		{
+			return !arg.HasValue || Equal(arg, 0);
+		}
 	}
 }
