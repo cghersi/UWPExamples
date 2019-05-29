@@ -17,8 +17,16 @@
 
 
         <RelativePanel Name="Comparison" Margin="400,50,0,0">
-            <RichEditBox Background="Bisque" Name="ContentInBox" Height="150" Width="200" />
-            <RichTextBlock Name="ContentInBlock" Height="150" Width="200" Margin="0,200,0,0"  />
+            <RichEditBox Background="Bisque" Name="ContentInBox" Height="150" Width="200"
+                FontFamily="Assets/paltn.ttf#Palatino-Roman" FontSize="10" TextWrapping="Wrap" Foreground="#FF3B341A" BorderThickness="0" AcceptsReturn="True" AllowFocusWhenDisabled="False" HorizontalTextAlignment="Left" >
+
+            </RichEditBox>
+            <RichTextBlock Name="ContentInBlock" Height="150" Width="200" Margin="0,200,0,0" 
+                FontFamily="Assets/paltn.ttf#Palatino-Roman" FontSize="10" TextWrapping="Wrap" Foreground="#FF3B341A" MaxLines="0" AllowFocusOnInteraction="False" IsHitTestVisible="False">
+                <Paragraph TextAlignment="Left" Foreground="#FF3B341A" FontStyle="Normal" FontFamily="Assets/paltn.ttf#Palatino-Roman" FontSize="10" TextIndent="3" LineHeight="10.8" LineStackingStrategy="BlockLineHeight">
+                    <Run Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rhoncus pharetra euismod." FontSize="10" Foreground="#FF3B341A" FontStyle="Normal" FontFamily="Assets/paltn.ttf#Palatino-Roman" />
+                </Paragraph>
+            </RichTextBlock>
             <TextBox Name="ContentInSimpleBox" Background="Aqua" Height="150" Width="200" Margin="0,400,0,0" />
         </RelativePanel>
     </RelativePanel>

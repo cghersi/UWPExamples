@@ -43,61 +43,66 @@ namespace RichText
 		{
 			InitializeComponent();
 
-			ScrollViewer.SetVerticalScrollBarVisibility(TestBox, ScrollBarVisibility.Hidden);
-			ScrollViewer.SetHorizontalScrollBarVisibility(TestBox, ScrollBarVisibility.Hidden);
-			SetEditBoxFormat(TestBox);
-
-			// set the format and content for comparison:
-			string comparisonContent =
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rhoncus pharetra euismod. " +
-				Environment.NewLine +
-				"Suspendisse potenti. In vel eros elit. In aliquam sit amet lorem sed iaculis. Nam sollicitudin volutpat.";
+			// I haven't found a way to set those properties in XAML:
 			ScrollViewer.SetVerticalScrollBarVisibility(ContentInBox, ScrollBarVisibility.Hidden);
 			ScrollViewer.SetHorizontalScrollBarVisibility(ContentInBox, ScrollBarVisibility.Hidden);
 			SetEditBoxFormat(ContentInBox);
-			ContentInBox.Document.SetText(TextSetOptions.None, comparisonContent);
 
-			SetRichText(ContentInBlock, new AttrString(comparisonContent, FONT));
+			//ScrollViewer.SetVerticalScrollBarVisibility(TestBox, ScrollBarVisibility.Hidden);
+			//ScrollViewer.SetHorizontalScrollBarVisibility(TestBox, ScrollBarVisibility.Hidden);
+			//SetEditBoxFormat(TestBox);
 
-			SetSimpleEditBoxFormat(ContentInSimpleBox);
-			ContentInSimpleBox.Text = comparisonContent;
+			//// set the format and content for comparison:
+			//string comparisonContent =
+			//	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rhoncus pharetra euismod. " +
+			//	Environment.NewLine +
+			//	"Suspendisse potenti. In vel eros elit. In aliquam sit amet lorem sed iaculis. Nam sollicitudin volutpat.";
+			//ScrollViewer.SetVerticalScrollBarVisibility(ContentInBox, ScrollBarVisibility.Hidden);
+			//ScrollViewer.SetHorizontalScrollBarVisibility(ContentInBox, ScrollBarVisibility.Hidden);
+			//SetEditBoxFormat(ContentInBox);
+			//ContentInBox.Document.SetText(TextSetOptions.None, comparisonContent);
 
-			// create the text block:
-			m_displayedText = new RichTextBlock
-			{
-				MaxLines = 0, //Let it use as many lines as it wants
-				TextWrapping = TextWrapping.Wrap,
-				AllowFocusOnInteraction = false,
-				IsHitTestVisible = false,
-				Width = 80,
-				Height = 30,
-				Margin = new Thickness(100)
-			};
+			//SetRichText(ContentInBlock, new AttrString(comparisonContent, FONT));
 
-			RichEditBox editText = new RichEditBox()
-			{
-				Background = new SolidColorBrush(Colors.Aqua),
-				BorderThickness = new Thickness(3),
-				BorderBrush = new SolidColorBrush(Colors.Blue),
-				Width = 80,
-				Height = 30,
-				Margin = new Thickness(300)
-			};
-			editText.Document.SetText(TextSetOptions.None, "test edit box");
-			ScrollViewer.SetVerticalScrollBarVisibility(editText, ScrollBarVisibility.Hidden);
-			ScrollViewer.SetHorizontalScrollBarVisibility(editText, ScrollBarVisibility.Hidden);
+			//SetSimpleEditBoxFormat(ContentInSimpleBox);
+			//ContentInSimpleBox.Text = comparisonContent;
 
-			// set the content with the right properties:
-			AttrString content = new AttrString("Excerpt1 InkLink", FONT);
-			SetRichText(m_displayedText, content);
+			//// create the text block:
+			//m_displayedText = new RichTextBlock
+			//{
+			//	MaxLines = 0, //Let it use as many lines as it wants
+			//	TextWrapping = TextWrapping.Wrap,
+			//	AllowFocusOnInteraction = false,
+			//	IsHitTestVisible = false,
+			//	Width = 80,
+			//	Height = 30,
+			//	Margin = new Thickness(100)
+			//};
 
-			// add to the main panel:
-			MainPanel.Children.Add(m_displayedText);
-			MainPanel.Children.Add(editText);
+			//RichEditBox editText = new RichEditBox()
+			//{
+			//	Background = new SolidColorBrush(Colors.Aqua),
+			//	BorderThickness = new Thickness(3),
+			//	BorderBrush = new SolidColorBrush(Colors.Blue),
+			//	Width = 80,
+			//	Height = 30,
+			//	Margin = new Thickness(300)
+			//};
+			//editText.Document.SetText(TextSetOptions.None, "test edit box");
+			//ScrollViewer.SetVerticalScrollBarVisibility(editText, ScrollBarVisibility.Hidden);
+			//ScrollViewer.SetHorizontalScrollBarVisibility(editText, ScrollBarVisibility.Hidden);
 
-			// compute the text height: (this gives the wrong answer!!):
-			double textH = GetRichTextHeight(content, (float)m_displayedText.Width);
-			Console.WriteLine("text height: {0}", textH);
+			//// set the content with the right properties:
+			//AttrString content = new AttrString("Excerpt1 InkLink", FONT);
+			//SetRichText(m_displayedText, content);
+
+			//// add to the main panel:
+			//MainPanel.Children.Add(m_displayedText);
+			//MainPanel.Children.Add(editText);
+
+			//// compute the text height: (this gives the wrong answer!!):
+			//double textH = GetRichTextHeight(content, (float)m_displayedText.Width);
+			//Console.WriteLine("text height: {0}", textH);
 		}
 
 		public static double GetRichTextHeight(AttrString text, float maxWidth)
