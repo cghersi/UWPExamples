@@ -44,8 +44,6 @@ namespace DropShadows
 		private static readonly CompositionGraphicsDevice s_compositionGraphicsDevice =
 			CanvasComposition.CreateCompositionGraphicsDevice(s_compositor, s_canvasDevice);
 
-		private static readonly float ADJUST_SIZE = 1.25f;
-
 		public static float CurrentZoom { get; set; } = 1f;
 
 		#region Public API
@@ -71,7 +69,11 @@ namespace DropShadows
 				{
 					// just change the appearance, if needed:
 					if (excView.View.ShadowNeedsChange(shadowOptions, excView.ShapeForShadow))
+					{
+						//shadowContainer.RemoveFullDropShadow(ref shadowOptions);
+						//excView.View.AddFullDropShadow(shadowContainer, ref shadowOptions);
 						excView.View.ChangeFullDropShadow(shadowContainer, shadowOptions);
+					}
 				}
 				else
 				{
@@ -92,11 +94,9 @@ namespace DropShadows
 
 		private static void RemoveFullDropShadow(this Panel element, ref DropShadowMetadata options)
 		{
-			// TODO requires LiquidText infrastructure here...
-			//options.HostElem.RemoveFromSuperview(element);
-			//options.MaskPanel.RemoveFromSuperview(element);
+			options.HostElem.RemoveFromSuperview(element);
+			options.MaskPanel.RemoveFromSuperview(element);
 			options.ShowShadow = false;
-			
 		}
 
 		#endregion Public API
@@ -147,7 +147,6 @@ namespace DropShadows
 
 		private static void ChangeFullDropShadow(this Panel element, Panel parent, DropShadowMetadata options)
 		{
-
 			// make sure we have the graphical elements (defensive):
 			if ((options.HostElem == null) || (options.MaskPanel == null)) // || (options.VisualShadow == null))
 			{
@@ -176,6 +175,8 @@ namespace DropShadows
 			CompositionDrawingSurface drawingSurface = DrawShadow(elemWidth, elemHeight, options);
 			if (drawingSurface == null)
 				return; //defensive
+
+			AssignDrawingSurface(drawingSurface, options.HostElem);
 
 			//// Set the shadow mask to be a new "brush" that fills with our drawing surface:
 			//shadow.Mask = s_compositor.CreateSurfaceBrush(drawingSurface);
@@ -222,9 +223,8 @@ namespace DropShadows
 			float elemWidth = (float)element.Width;
 			float elemHeight = (float)element.Height;
 		
-
 			// Create a child host for shadow to insert in parent next to / behind element:
-			DropShadow shadow = CreateGraphicalElements(element, parent, options);
+			CreateGraphicalElements(element, parent, options);
 
 			// Create a drawing-surface brush what we can use as a mask for the shadow.
 			// Draw the shadow mask into our new drawing surface (which in turn sets the brush with which we paint our visual):
@@ -256,7 +256,7 @@ namespace DropShadows
 			ElementCompositionPreview.SetElementChildVisual(element, shadowVisual);
 		}
 
-		private static DropShadow CreateGraphicalElements(Panel element, Panel parent, DropShadowMetadata options)
+		private static void CreateGraphicalElements(Panel element, Panel parent, DropShadowMetadata options)
 		{
 			double elemWidth = element.Width;
 			double elemHeight = element.Height;
@@ -304,7 +304,7 @@ namespace DropShadows
 			//// Inject the visual as a child of the grid:
 			//ElementCompositionPreview.SetElementChildVisual(options.HostElem, options.VisualShadow);
 
-			return null; //shadow;
+			//return shadow;
 		}
 
 		private static CompositionDrawingSurface DrawShadow(float elemWidth, float elemHeight, DropShadowMetadata options)
@@ -423,6 +423,23 @@ namespace DropShadows
 		private static bool Equal(this float arg1, float arg2)
 		{
 			return Math.Abs(arg1 - arg2) < 0.01;
+		}
+
+		public static void RemoveFromSuperview(this FrameworkElement elem, FrameworkElement superview)
+		{
+			if (elem == null)
+				return;
+			if (superview == null)
+				superview = elem.Parent as FrameworkElement;
+			switch (superview)
+			{
+				case Panel parent:
+					parent.Children.Remove(elem);
+					break;
+				case ContentControl cc:
+					cc.Content = null;
+					break;
+			}
 		}
 
 		private static Vector2 ComputeNegativeOffset(PathFigure figure)
