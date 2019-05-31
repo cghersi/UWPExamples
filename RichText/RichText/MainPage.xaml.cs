@@ -22,7 +22,7 @@ namespace RichText
 	{
 		public static readonly FontFamily FONT_FAMILY = new FontFamily("Assets/paltn.ttf#Palatino-Roman");
 		public const int FONT_SIZE = 10;
-		public const int LINE_HEAD_INDENT = 10;
+		public const int LINE_HEAD_INDENT = 3;
 		public const float LINE_SPACING = 1.08f;
 		private static readonly Color FONT_FOREGROUND_COLOR = Color.FromArgb(255, 59, 52, 26);
 		public static readonly SolidColorBrush FONT_FOREGROUND = new SolidColorBrush(FONT_FOREGROUND_COLOR);
@@ -176,10 +176,10 @@ namespace RichText
 			// set paragraph format:
 			ITextParagraphFormat paragraphFrmt = editBox.Document.GetDefaultParagraphFormat();
 			paragraphFrmt.Alignment = ParagraphAlignment.Left;
-			paragraphFrmt.SetLineSpacing(LineSpacingRule.Exactly, FONT_SIZE * 1.08f);
+			paragraphFrmt.SetLineSpacing(LineSpacingRule.Exactly, FONT_SIZE * 72f / 96f * 1.08f);
 
 			// adding this setting jeopardizes the computation of height for the text view in UWPUtils.GetRichTextHeight()
-			//paragraphFrmt.SetIndents(LINE_HEAD_INDENT, 0, 0);
+			paragraphFrmt.SetIndents(LINE_HEAD_INDENT * 72f / 96f, 0, 0);
 			editBox.Document.SetDefaultParagraphFormat(paragraphFrmt);
 
 			// set character format:

@@ -45,15 +45,15 @@ namespace ExtendIOSConcepts
 		private void MovePanel_OnClick(object sender, RoutedEventArgs e)
 		{
 			m_view1.SetMargin(300, 500);
-			//m_view1.RequestNewLayout();
-			//m_view1.RequestNewLayout();
+			m_view1.RequestNewLayout();
+			m_view1.RequestNewLayout();
 		}
 
 		private void ExpandPanel_OnClick(object sender, RoutedEventArgs e)
 		{
 			m_view1.SetSize(600, 300);
-			//m_view1.RequestNewLayout();
-			//m_view1.RequestNewLayout();
+			m_view1.RequestNewLayout();
+			m_view1.RequestNewLayout();
 		}
 
 		private void ComplexMove_OnClick(object sender, RoutedEventArgs e)
