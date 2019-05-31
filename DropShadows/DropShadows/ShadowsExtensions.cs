@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Composition;
 // ReSharper disable ArrangeAccessorOwnerBody
@@ -30,9 +31,11 @@ namespace DropShadows
 	public static class ShadowExtensions
 	{
 		private const int DEFAULT_SIZE = 1000;
+		private const float BLUR_AMOUNT = 5.0f;
+		private static readonly Matrix3x2 OFFSET_FOR_BLUR = Matrix3x2.CreateTranslation(new Vector2(2.0f * BLUR_AMOUNT, 2.0f * BLUR_AMOUNT));
 
-		public static readonly Vector3
-			DEFAULT_OFFSET = new Vector3 { X = 0, Y = 0, Z = 0 }; // new Vector3() {X = 10, Y = 12, Z = 10};
+		private static readonly Vector3 SHADOW_OFFSET = new Vector3(2.0f, 2.0f, 0.0f);
+		public static readonly Vector3 DEFAULT_OFFSET = new Vector3 { X = 0, Y = 0, Z = 0 }; 
 
 		private static readonly CanvasDevice s_canvasDevice = CanvasDevice.GetSharedDevice();
 
@@ -146,15 +149,15 @@ namespace DropShadows
 		{
 
 			// make sure we have the graphical elements (defensive):
-			if ((options.HostElem == null) || (options.MaskPanel == null) || (options.VisualShadow == null))
+			if ((options.HostElem == null) || (options.MaskPanel == null)) // || (options.VisualShadow == null))
 			{
 				CreateGraphicalElements(element, parent, options);
-				if ((options.HostElem == null) || (options.MaskPanel == null) || (options.VisualShadow == null))
+				if ((options.HostElem == null) || (options.MaskPanel == null)) // || (options.VisualShadow == null))
 					return; // very defensive!!
 			}
 
-			if (!(options.VisualShadow?.Shadow is DropShadow shadow))
-				return; // defensive!!
+			//if (!(options.VisualShadow?.Shadow is DropShadow shadow))
+			//	return; // defensive!!
 
 			float elemWidth = (float)element.Width;
 			float elemHeight = (float)element.Height;
@@ -174,9 +177,9 @@ namespace DropShadows
 			if (drawingSurface == null)
 				return; //defensive
 
-			// Set the shadow mask to be a new "brush" that fills with our drawing surface:
-			shadow.Mask = s_compositor.CreateSurfaceBrush(drawingSurface);
-			//}
+			//// Set the shadow mask to be a new "brush" that fills with our drawing surface:
+			//shadow.Mask = s_compositor.CreateSurfaceBrush(drawingSurface);
+			////}
 
 			// change the size of the hosting elements:
 			options.HostElem.Width = elemWidth;
@@ -230,11 +233,27 @@ namespace DropShadows
 				return; //defensive
 
 			// Set the shadow mask to be a new "brush" that fills with our drawing surface:
-			shadow.Mask = s_compositor.CreateSurfaceBrush(drawingSurface);
+			//shadow.Mask = s_compositor.CreateSurfaceBrush(drawingSurface);
+
+			AssignDrawingSurface(drawingSurface, options.HostElem);
 
 			// update the resulting shadow metadata:
 			options.ShowShadow = true;
 			options.Zoom = CurrentZoom;
+		}
+
+		private static void AssignDrawingSurface(CompositionDrawingSurface drawingSurface, UIElement element)
+		{
+			Visual gridVisual = ElementCompositionPreview.GetElementVisual(element);
+			Compositor compositor = gridVisual.Compositor;
+			SpriteVisual shadowVisual = compositor.CreateSpriteVisual();
+			CompositionSurfaceBrush surfaceBrush = compositor.CreateSurfaceBrush();
+			surfaceBrush.Surface = drawingSurface;
+			Size surfaceSize = drawingSurface.Size;
+			shadowVisual.Offset = SHADOW_OFFSET;
+			shadowVisual.Brush = surfaceBrush;
+			shadowVisual.Size = new Vector2((float)surfaceSize.Width, (float)surfaceSize.Height);
+			ElementCompositionPreview.SetElementChildVisual(element, shadowVisual);
 		}
 
 		private static DropShadow CreateGraphicalElements(Panel element, Panel parent, DropShadowMetadata options)
@@ -243,9 +262,9 @@ namespace DropShadows
 			double elemHeight = element.Height;
 
 			options.HostElem = new ShadowHost(elemWidth, elemHeight)
-			{ Name = element.Name + "_host" };
+				{ Name = "Host_" + element.Name };
 			options.MaskPanel = new ShadowMaskPanel(elemWidth, elemHeight, element.Background)
-			{ Name = element.Name + "_MaskPanel" };
+				{ Name = "MaskPanel_" + element.Name };
 
 			if (options.HostInParent)
 			{
@@ -268,34 +287,36 @@ namespace DropShadows
 			// TODO: it is not yet perfectly clear how to programmatically retrieve such coefficient,
 			// a possible option is to check for the native resolution of the screen vs. the actual one.
 			// For now, it can be tuned in configuration, in ltSettings.xml file, "ResolutionAdjustFactor" key.
-			options.VisualShadow = s_compositor.CreateLayerVisual();
-			float dimension = DEFAULT_SIZE * ADJUST_SIZE;
-			options.VisualShadow.Size = new Vector2(dimension, dimension);
+			//options.VisualShadow = s_compositor.CreateLayerVisual();
+			//float dimension = DEFAULT_SIZE * ADJUST_SIZE;
+			//options.VisualShadow.Size = new Vector2(dimension, dimension);
 
-			// Create DropShadow
-			DropShadow shadow = s_compositor.CreateDropShadow();
-			shadow.Color = options.Color;
-			shadow.Offset = options.Offset;
-			shadow.BlurRadius = options.BlurRadius;
-			shadow.SourcePolicy = CompositionDropShadowSourcePolicy.Default;
+			//// Create DropShadow
+			//DropShadow shadow = s_compositor.CreateDropShadow();
+			//shadow.Color = options.Color;
+			//shadow.Offset = options.Offset;
+			//shadow.BlurRadius = options.BlurRadius;
+			//shadow.SourcePolicy = CompositionDropShadowSourcePolicy.Default;
 
-			// Associate Shadow with LayerVisual:
-			options.VisualShadow.Shadow = shadow;
+			//// Associate Shadow with LayerVisual:
+			//options.VisualShadow.Shadow = shadow;
 
-			// Inject the visual as a child of the grid:
-			ElementCompositionPreview.SetElementChildVisual(options.HostElem, options.VisualShadow);
+			//// Inject the visual as a child of the grid:
+			//ElementCompositionPreview.SetElementChildVisual(options.HostElem, options.VisualShadow);
 
-			return shadow;
+			return null; //shadow;
 		}
 
 		private static CompositionDrawingSurface DrawShadow(float elemWidth, float elemHeight, DropShadowMetadata options)
 		{
 			// Make the drawing surface we can draw the shadow mask onto:
-			CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
-				new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
-				DirectXAlphaMode.Premultiplied);
+			//CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
+			//	new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
+			//	DirectXAlphaMode.Premultiplied);
 
-			using (CanvasDrawingSession ds = CanvasComposition.CreateDrawingSession(drawingSurface))
+			CanvasCommandList cl = new CanvasCommandList(s_canvasDevice);
+			using (CanvasDrawingSession ds = cl.CreateDrawingSession())
+				//using (CanvasDrawingSession ds = CanvasComposition.CreateDrawingSession(drawingSurface))
 			{
 				ds.Clear(Colors.Transparent);
 				CanvasPathBuilder pathBuilder = new CanvasPathBuilder(s_canvasDevice);
@@ -367,7 +388,24 @@ namespace DropShadows
 					pathBuilder.EndFigure(CanvasFigureLoop.Closed);
 				}
 
-				ds.FillGeometry(CanvasGeometry.CreatePath(pathBuilder), Colors.AliceBlue);
+				ds.FillGeometry(CanvasGeometry.CreatePath(pathBuilder), Colors.Black);
+			}
+
+			// Make the drawing surface we can draw the shadow mask onto:
+			CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
+				new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
+				DirectXAlphaMode.Premultiplied);
+
+			GaussianBlurEffect blurEffect = new GaussianBlurEffect
+			{
+				BlurAmount = BLUR_AMOUNT,
+				Source = cl
+			};
+
+			using (CanvasDrawingSession ds = CanvasComposition.CreateDrawingSession(drawingSurface))
+			{
+				ds.Transform = OFFSET_FOR_BLUR;
+				ds.DrawImage(blurEffect);
 			}
 
 			return drawingSurface;

@@ -8,7 +8,6 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-       <Canvas Name="ShadowPres1" Margin="200,100,0,0" Background="Bisque" Width="100" Height="200"></Canvas>
-    </Grid>
+    <Canvas Name="MainContainer">
+    </Canvas>
 </Page>
