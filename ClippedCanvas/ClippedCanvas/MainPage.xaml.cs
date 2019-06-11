@@ -7,7 +7,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Microsoft.Graphics.Canvas.Geometry;
-using CompositionProToolkit;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -16,7 +15,7 @@ namespace ClippedCanvas
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
-	public sealed partial class MainPage : Page
+	public sealed partial class MainPage
 	{
 		private readonly InkCanvas m_inkCanvas = new InkCanvas();
 		private int m_strokeCount = 0;
@@ -27,6 +26,7 @@ namespace ClippedCanvas
 		public MainPage()
 		{
 			InitializeComponent();
+			m_inkCanvas.IsHitTestVisible = false;
 			m_inkCanvas.Width = Workspace.Width;
 			m_inkCanvas.Height = Workspace.Height;
 			Workspace.Children.Add(m_inkCanvas);
@@ -96,6 +96,21 @@ namespace ClippedCanvas
 		private void InkAboveBtn_OnClick(object sender, RoutedEventArgs e)
 		{
 			Canvas.SetZIndex(Workspace, 20);
+		}
+	}
+
+	public static class Utils
+	{
+		public static CompositionGeometricClip CreateGeometricClip(
+			this Compositor compositor,
+			CanvasGeometry geometry)
+		{
+			// Create the CompositionPath
+			CompositionPath path = new CompositionPath(geometry);
+			// Create the CompositionPathGeometry
+			CompositionPathGeometry pathGeometry = compositor.CreatePathGeometry(path);
+			// Create the CompositionGeometricClip
+			return compositor.CreateGeometricClip(pathGeometry);
 		}
 	}
 }
