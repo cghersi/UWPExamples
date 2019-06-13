@@ -19,6 +19,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Composition;
+using System.Diagnostics;
 // ReSharper disable ArrangeAccessorOwnerBody
 
 namespace DropShadows
@@ -30,9 +31,9 @@ namespace DropShadows
 	/// </summary>
 	public static class ShadowExtensions
 	{
-		private const int DEFAULT_SIZE = 1000;
 		private const float BLUR_AMOUNT = 5.0f;
-		private static readonly Matrix3x2 OFFSET_FOR_BLUR = Matrix3x2.CreateTranslation(new Vector2(2.0f * BLUR_AMOUNT, 2.0f * BLUR_AMOUNT));
+        private const float OFFSET_FOR_BLUR = 2.0f * BLUR_AMOUNT;
+        private static readonly Matrix3x2 OFFSET_TRANSLATION_FOR_BLUR = Matrix3x2.CreateTranslation(new Vector2(OFFSET_FOR_BLUR, OFFSET_FOR_BLUR));
 
 		private static readonly Vector3 SHADOW_OFFSET = new Vector3(2.0f, 2.0f, 0.0f);
 		public static readonly Vector3 DEFAULT_OFFSET = new Vector3 { X = 0, Y = 0, Z = 0 }; 
@@ -45,6 +46,8 @@ namespace DropShadows
 			CanvasComposition.CreateCompositionGraphicsDevice(s_compositor, s_canvasDevice);
 
 		public static float CurrentZoom { get; set; } = 1f;
+
+        private static ContainerVisual shadowHolderVisual = null;
 
 		#region Public API
 		///////////////////////////////////////////////////////////////////////////
@@ -250,11 +253,20 @@ namespace DropShadows
 			CompositionSurfaceBrush surfaceBrush = compositor.CreateSurfaceBrush();
 			surfaceBrush.Surface = drawingSurface;
 			Size surfaceSize = drawingSurface.Size;
+
 			shadowVisual.Offset = SHADOW_OFFSET;
 			shadowVisual.Brush = surfaceBrush;
 			shadowVisual.Size = new Vector2((float)surfaceSize.Width, (float)surfaceSize.Height);
-			ElementCompositionPreview.SetElementChildVisual(element, shadowVisual);
-		}
+
+            if (shadowHolderVisual == null)
+            {
+                shadowHolderVisual = compositor.CreateContainerVisual();
+                ElementCompositionPreview.SetElementChildVisual(element, shadowHolderVisual);
+            }
+
+            shadowHolderVisual.Children.RemoveAll();
+            shadowHolderVisual.Children.InsertAtBottom(shadowVisual);
+        }
 
 		private static void CreateGraphicalElements(Panel element, Panel parent, DropShadowMetadata options)
 		{
@@ -309,12 +321,17 @@ namespace DropShadows
 
 		private static CompositionDrawingSurface DrawShadow(float elemWidth, float elemHeight, DropShadowMetadata options)
 		{
-			// Make the drawing surface we can draw the shadow mask onto:
-			//CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
-			//	new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
-			//	DirectXAlphaMode.Premultiplied);
+            const float minX = 0;
+            float maxX = (elemWidth + 2 * options.Offset.X) * CurrentZoom;
+            const float minY = 0;
+            float maxY = (elemHeight + 2 * options.Offset.Y) * CurrentZoom;
 
-			CanvasCommandList cl = new CanvasCommandList(s_canvasDevice);
+            // Make the drawing surface we can draw the shadow mask onto:
+            //CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
+            //	new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
+            //	DirectXAlphaMode.Premultiplied);
+
+            CanvasCommandList cl = new CanvasCommandList(s_canvasDevice);
 			using (CanvasDrawingSession ds = cl.CreateDrawingSession())
 				//using (CanvasDrawingSession ds = CanvasComposition.CreateDrawingSession(drawingSurface))
 			{
@@ -325,11 +342,6 @@ namespace DropShadows
 					// consider using the default rectangular shape instead of a mask here for performance:
 					//https://docs.microsoft.com/gl-es/windows/uwp/composition/composition-shadows?view=azurebatch-7.0.0
 
-					// default choice, a rectangle:
-					const float minX = 0;
-					float maxX = (elemWidth + 2 * options.Offset.X) * CurrentZoom;
-					const float minY = 0;
-					float maxY = (elemHeight + 2 * options.Offset.Y) * CurrentZoom;
 					//float minX = -options.Offset.X * CurrentZoom;
 					//float maxX = (elemWidth + options.Offset.X) * CurrentZoom;
 					//float minY = -options.Offset.Y * CurrentZoom;
@@ -392,8 +404,10 @@ namespace DropShadows
 			}
 
 			// Make the drawing surface we can draw the shadow mask onto:
+            // Additionally, make sure it's large enough on both sides to accomodate the blur extending from the original shape
 			CompositionDrawingSurface drawingSurface = s_compositionGraphicsDevice.CreateDrawingSurface(
-				new Size(DEFAULT_SIZE, DEFAULT_SIZE), DirectXPixelFormat.B8G8R8A8UIntNormalized,
+				new Size(maxX + 2.0f*OFFSET_FOR_BLUR, maxY + 2.0f * OFFSET_FOR_BLUR), 
+                DirectXPixelFormat.B8G8R8A8UIntNormalized,
 				DirectXAlphaMode.Premultiplied);
 
 			GaussianBlurEffect blurEffect = new GaussianBlurEffect
@@ -404,7 +418,7 @@ namespace DropShadows
 
 			using (CanvasDrawingSession ds = CanvasComposition.CreateDrawingSession(drawingSurface))
 			{
-				ds.Transform = OFFSET_FOR_BLUR;
+				ds.Transform = OFFSET_TRANSLATION_FOR_BLUR;
 				ds.DrawImage(blurEffect);
 			}
 

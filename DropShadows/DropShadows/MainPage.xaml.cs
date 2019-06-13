@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
@@ -88,6 +89,8 @@ namespace DropShadows
 			elem?.ReleasePointerCapture(e.Pointer);
 		}
 
+        static bool shadowInitialSizeEvaluated = false;
+
 		private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
 		{
 			if (!m_dragging)
@@ -98,20 +101,35 @@ namespace DropShadows
 
 			// update the size of the element:
 			Point curPoint = e.GetCurrentPoint(null).Position;
-			if (m_lastPoint.X > 0)
+
+			if (shadowInitialSizeEvaluated)
 			{
 				double deltaX = curPoint.X - m_lastPoint.X;
 				double deltaY = curPoint.Y - m_lastPoint.Y;
 
-				View.Width += deltaX;
-				View.Height += deltaY;
+                // Only update the size if it's a valid size
+                if (View.Width + deltaX > 20.0f &&
+                    View.Height + deltaY > 20.0f
+                    )
+                {
+                    View.Width += deltaX;
+                    View.Height += deltaY;
 
-				m_handle.Margin = new Thickness(m_handle.Margin.Left + deltaX, m_handle.Margin.Top + deltaY, 0, 0);
-			}
-			m_lastPoint = curPoint;
+                    m_handle.Margin = new Thickness(m_handle.Margin.Left + deltaX, m_handle.Margin.Top + deltaY, 0, 0);
 
-			// update the shadow:
-			this.ManageShadow(true, View, ref m_shadowOptions);
+                    m_lastPoint = curPoint;
+
+                    // update the shadow:
+                    this.ManageShadow(true, View, ref m_shadowOptions);
+                }
+            }
+            else
+            {
+                m_lastPoint = curPoint;
+            }
+
+            shadowInitialSizeEvaluated = true;
+
 		}
 	}
 }
