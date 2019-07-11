@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Windows.Foundation.Metadata;
 using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Input.Inking;
@@ -70,6 +71,8 @@ namespace ClippedCanvas
 
 		private void ExpandClipArea()
 		{
+			if (!ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateGeometricClip", 1))
+				return;
 			m_radius += 50;
 			Visual visual = ElementCompositionPreview.GetElementVisual(m_inkCanvas);
 			Compositor comp = visual.Compositor;
