@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="SyncAntiPattern.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SyncAntiPattern"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas>
+        <Button Click="CreateFolder_OnClick" Margin="200,100,0,0">Create Folder</Button>
+        <TextBlock Margin="400, 100, 0 ,0" Name="ResultTxt"></TextBlock>
+
+        <Button Click="CreateFolderWithSync_OnClick" Margin="200,200,0,0">Create Folder With Sync</Button>
+        <TextBlock Margin="400, 200, 0 ,0" Name="ResultWithSyncTxt"></TextBlock>
+
+        <Button Click="GetFolder_OnClick" Margin="200,300,0,0">Get Folder</Button>
+        <TextBlock Margin="400, 300, 0 ,0" Name="ResultGetTxt"></TextBlock>
+
+        <Button Click="GetFolderWithSync_OnClick" Margin="200,400,0,0">Get Folder With Sync</Button>
+        <TextBlock Margin="400, 400, 0 ,0" Name="ResultWithSyncGetTxt"></TextBlock>
+    </Canvas>
+</Page>

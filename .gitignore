@@ -1,6 +1,8 @@
 /ClippedCanvas/.vs/ClippedCanvas/v15
 /ClippedCanvas/.vs/ClippedCanvas/v16
+/ClippedCanvas/ClippedCanvas/AppPackages
 /ClippedCanvas/ClippedCanvas/bin
+/ClippedCanvas/ClippedCanvas/BundleArtifacts
 /ClippedCanvas/ClippedCanvas/obj
 /CustomFonts/.vs/CustomFonts/v15
 /CustomFonts/.vs/CustomFonts/v16
@@ -51,3 +53,7 @@
 /RichText/.vs/RichText/v16
 /RichText/RichText/bin
 /RichText/RichText/obj
+/SyncAntiPattern/.vs/SyncAntiPattern/v15
+/SyncAntiPattern/.vs/SyncAntiPattern/v16
+/SyncAntiPattern/SyncAntiPattern/bin
+/SyncAntiPattern/SyncAntiPattern/obj
