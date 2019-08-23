@@ -8,10 +8,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Canvas Height="1000" Width="1000" Background="LightGreen">
+    <Canvas Background="LightGreen">
         <Canvas Name="MainContainer" Height="800" Width="800" Background="AliceBlue">
             <Canvas Name="MovingItem" Margin="200,200,0,0" Background="Aqua" Height="200" Width="150"></Canvas>
         </Canvas>
         <Button Click="ButtonBase_OnClick" Margin="810,0,0,0">Logs</Button>
+        <TextBlock Name="Results" Margin="810,50,0,0" Width="400" Height="800" TextWrapping="Wrap" IsTextSelectionEnabled="True"></TextBlock>
     </Canvas>
 </Page>

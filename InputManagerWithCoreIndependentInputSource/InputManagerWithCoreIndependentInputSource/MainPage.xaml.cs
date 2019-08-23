@@ -35,7 +35,7 @@ namespace InputManagerWithCoreIndependentInputSource
 			m_chainPanel.StartProcessingInput();
 			m_gestRecEngine.AttachEvents(m_chainPanel);
 			m_gestRecEngine.AddGestureRecognizer(new LTDragGestureRecognizer(this));
-			
+
 			CompositionTarget.Rendering += LTGestureRecognizerEngine.CompositionTarget_Rendering;
 
 			m_logs.Add("End Loading");
@@ -44,7 +44,7 @@ namespace InputManagerWithCoreIndependentInputSource
 		public async Task<bool> StartExcerptGesture(LTTouch touch)
 		{
 			//Debug.WriteLine("Start moving item with touch: {0}", touch);
-			
+
 			// simulate some long lasting op...
 			string filename = FileName(touch);
 			try
@@ -110,17 +110,21 @@ namespace InputManagerWithCoreIndependentInputSource
 				file = await FOLDER.GetFileAsync(filename);
 			}
 
+			StringBuilder sbResults = new StringBuilder();
+			sbResults.AppendLine(LTGestureRecognizerEngine.ProfilerDown.PrintResults());
+			sbResults.AppendLine(LTGestureRecognizerEngine.ProfilerMoved.PrintResults());
+			sbResults.AppendLine(LTGestureRecognizerEngine.ProfilerUp.PrintResults());
+			sbResults.AppendLine(LTGestureRecognizerEngine.ProfilerCapLost.PrintResults());
+			sbResults.AppendLine(LTGestureRecognizerEngine.ProfilerRendering.PrintResults());
+			Results.Text = "Log File in " + file.Path + Environment.NewLine + sbResults.ToString();
+
 			StringBuilder sb = new StringBuilder();
 			foreach (string log in m_logs)
 			{
 				sb.AppendLine(log);
 			}
 			m_logs.Clear();
-			sb.AppendLine(LTGestureRecognizerEngine.ProfilerDown.PrintResults());
-			sb.AppendLine(LTGestureRecognizerEngine.ProfilerMoved.PrintResults());
-			sb.AppendLine(LTGestureRecognizerEngine.ProfilerUp.PrintResults());
-			sb.AppendLine(LTGestureRecognizerEngine.ProfilerCapLost.PrintResults());
-			sb.AppendLine(LTGestureRecognizerEngine.ProfilerRendering.PrintResults());
+			sb.AppendLine(sbResults.ToString());
 			sb.AppendLine("");
 
 			try
