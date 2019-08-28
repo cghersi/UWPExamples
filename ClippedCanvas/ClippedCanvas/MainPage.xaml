@@ -9,15 +9,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Canvas Name="MainPanel">
-        <TextBlock Name="StrokeCounter" Width="150" Height="30" Margin="10,10,0,0" Canvas.ZIndex="10"></TextBlock>
-        <TextBlock Name="ClickedCounter" Width="150" Height="30" Margin="200,10,0,0" Canvas.ZIndex="10"></TextBlock>
+        <TextBlock Name="StrokeCounter" Width="150" Height="20" Margin="10,10,0,0" Canvas.ZIndex="10"></TextBlock>
+        <TextBlock Name="ClickedCounter" Width="150" Height="20" Margin="200,10,0,0" Canvas.ZIndex="10"></TextBlock>
+        <TextBlock Name="TimeResults" Width="400" Height="20" Margin="10,35,0,0" Canvas.ZIndex="10"></TextBlock>
         <TextBlock Name="Explanation" Width="650" Height="80" Margin="10,110,0,0" FontSize="10" Canvas.ZIndex="10">
         </TextBlock>
-        <Button Name="ExpandBtn" Click="ExpandBtn_OnClick" Margin="10,50,0,0" Canvas.ZIndex="10">Expand clip area</Button>
-        <Button Name="InkBelowBtn" Click="InkBelowBtn_OnClick" Margin="150,50,0,0" Canvas.ZIndex="10">Ink below Buttons</Button>
-        <Button Name="InkAboveBtn" Click="InkAboveBtn_OnClick" Margin="300,50,0,0" Canvas.ZIndex="10">Ink above Buttons</Button>
+        <Button Name="ExpandBtn" Click="ExpandBtn_OnClick" Margin="10,60,0,0" Canvas.ZIndex="10">Expand clip area</Button>
+        <Button Name="ExpandBtnWithHoles" Click="ExpandBtnWithHoles_OnClick" Margin="150,60,0,0" Canvas.ZIndex="10">ClipArea With Holes</Button>
+        <Button Name="InkBelowBtn" Click="InkBelowBtn_OnClick" Margin="300,60,0,0" Canvas.ZIndex="10">Ink below Buttons</Button>
+        <Button Name="InkAboveBtn" Click="InkAboveBtn_OnClick" Margin="450,60,0,0" Canvas.ZIndex="10">Ink above Buttons</Button>
+        <Button Name="LotOfHolesBtn" Click="LotOfHolesBtn_OnClick" Margin="600,60,0,0" Canvas.ZIndex="10">LotOfHoles</Button>
+        <TextBox Name="HolesNum" Margin="700,60,0,0" Canvas.ZIndex="10"></TextBox>
         <Button Name="CanClickBtn" Click="ClickBtn_OnClick" Margin="180,580,0,0" Canvas.ZIndex="10">Can Click?</Button>
         <Canvas Name="Workspace" Width="600" Height="600" Margin="0,200,0,0" Background="AntiqueWhite" Opacity="0.5">
+            <Canvas Name="PanelBtn" PointerPressed="PanelBtn_OnClick" Margin="150,180,0,0" Background="Aqua" Width="20" Height="20"></Canvas>
             <Button Name="ClickBtn" Click="ClickBtn_OnClick" Margin="180,180,0,0" >Click</Button>
             <Button Name="ClickBtn2" Click="ClickBtn_OnClick" Margin="380,180,0,0" >ClickOutside</Button>
         </Canvas>

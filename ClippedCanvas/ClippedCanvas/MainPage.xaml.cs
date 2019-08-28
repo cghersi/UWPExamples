@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 using Windows.UI.Composition;
 using Windows.UI.Core;
@@ -6,7 +7,9 @@ using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Microsoft.Graphics.Canvas.Geometry;
+// ReSharper disable InconsistentNaming
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -77,25 +80,83 @@ namespace ClippedCanvas
 			visual.Clip = comp.CreateGeometricClip(clipGeometry);
 		}
 
-		private void ExpandBtn_OnClick(object sender, RoutedEventArgs e)
+		private static void ClipAreaWithHoles(FrameworkElement target, params FrameworkElement[] excluded)
+		{
+			Visual visual = ElementCompositionPreview.GetElementVisual(target);
+			Compositor comp = visual.Compositor;
+			CanvasGeometry clipGeometry =
+				CanvasGeometry.CreateRectangle(null, 0, 0, (float) target.Width, (float) target.Height);
+
+			foreach (FrameworkElement excl in excluded)
+			{
+				CanvasGeometry excludedGeom = CanvasGeometry.CreateRectangle(null, 
+					(float)excl.Margin.Left, (float)excl.Margin.Top, (float)excl.ActualWidth, (float)excl.ActualHeight);
+				clipGeometry = clipGeometry.CombineWith(excludedGeom, Matrix3x2.Identity, CanvasGeometryCombine.Exclude);
+			}
+			visual.Clip = comp.CreateGeometricClip(clipGeometry);
+		}
+
+		private void ExpandBtn_OnClick(object _1, RoutedEventArgs _2)
 		{
 			ExpandClipArea();
 		}
 
-		private void ClickBtn_OnClick(object sender, RoutedEventArgs e)
+		private void ExpandBtnWithHoles_OnClick(object _1, RoutedEventArgs _2)
+		{
+			ClipAreaWithHoles(m_inkCanvas, ClickBtn, ClickBtn2, PanelBtn);
+		}
+
+		private void PanelBtn_OnClick(object _1, PointerRoutedEventArgs _2)
 		{
 			m_clickCount++;
 			ShowClickCount();
 		}
 
-		private void InkBelowBtn_OnClick(object sender, RoutedEventArgs e)
+		private void ClickBtn_OnClick(object _1, RoutedEventArgs _2)
+		{
+			m_clickCount++;
+			ShowClickCount();
+		}
+
+		private void InkBelowBtn_OnClick(object _1, RoutedEventArgs _2)
 		{
 			Canvas.SetZIndex(Workspace, 1);
 		}
 
-		private void InkAboveBtn_OnClick(object sender, RoutedEventArgs e)
+		private void InkAboveBtn_OnClick(object _1, RoutedEventArgs _2)
 		{
 			Canvas.SetZIndex(Workspace, 20);
+		}
+
+		private void LotOfHolesBtn_OnClick(object _1, RoutedEventArgs _2)
+		{
+			Stopwatch sw = Stopwatch.StartNew();
+			Visual visual = ElementCompositionPreview.GetElementVisual(m_inkCanvas);
+			Compositor comp = visual.Compositor;
+			CanvasGeometry clipGeometry =
+				CanvasGeometry.CreateRectangle(null, 0, 0, (float)m_inkCanvas.Width, (float)m_inkCanvas.Height);
+
+			sw.Stop();
+			double time1 = sw.Elapsed.TotalMilliseconds;
+			sw.Restart();
+
+			int numOfHoles = int.Parse(HolesNum.Text);
+			for (int i = 0; i < numOfHoles; i++)
+			{ 
+				CanvasGeometry excludedGeom = CanvasGeometry.CreateRectangle(null,
+					i, i * 2, i * 2 - (i / 3), i * 5);
+				clipGeometry = clipGeometry.CombineWith(excludedGeom, Matrix3x2.Identity, CanvasGeometryCombine.Exclude);
+			}
+
+			sw.Stop();
+			double time2 = sw.Elapsed.TotalMilliseconds;
+			sw.Restart();
+
+			visual.Clip = comp.CreateGeometricClip(clipGeometry);
+
+			sw.Stop();
+			double time3 = sw.Elapsed.TotalMilliseconds;
+			TimeResults.Text = string.Format("First: {0}ms; Exclusions: {1}ms; geomClip: {2}ms", time1, time2, time3);
 		}
 	}
 
