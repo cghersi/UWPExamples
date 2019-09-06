@@ -51,6 +51,7 @@ namespace SizeOfTextBox
 				Padding = new Thickness(0),
 				TextWrapping = TextWrapping.Wrap,
 				Foreground = FONT_FOREGROUND,
+				Background = new SolidColorBrush(Colors.Aqua),
 				BorderThickness = new Thickness(0),
 				AcceptsReturn = true,
 				AllowFocusWhenDisabled = false

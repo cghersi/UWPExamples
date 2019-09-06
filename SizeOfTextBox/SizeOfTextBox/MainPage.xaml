@@ -11,6 +11,15 @@
     <Canvas Name="MainContainer" Width="800" Height="800" Background="AntiqueWhite">
         <Button Click="ButtonBase_OnClick" Margin="20,20,0,0">Add Text Box</Button>
         <Button Click="ComputeHeight_OnClick" Margin="20,60,0,0">Compute Height</Button>
+        <TextBlock Margin="220,20,0,0" Width="2000" Height="300">
+            Click on "Add Text Box", and see what is the initial height of the element. 
+        </TextBlock>
+        <TextBlock Margin="220,50,0,0" Width="2000" Height="300"> 
+            Then, start typing on the edit box with Aqua background, and click on "Compute Height"
+        </TextBlock>
+        <TextBlock Margin="220,70,0,0" Width="2000" Height="300"> 
+            to get the current height of the text.
+        </TextBlock>
         <TextBlock Name="InitHeight" Margin="20,100,0,0"></TextBlock>
         <TextBlock Name="FinalHeight" Margin="20,200,0,0"></TextBlock>
     </Canvas>
