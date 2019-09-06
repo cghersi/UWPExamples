@@ -26,6 +26,24 @@
             <Button Name="ClickBtn" Click="ClickBtn_OnClick" Margin="180,180,0,0" >Click</Button>
             <Button Name="ClickBtn2" Click="ClickBtn_OnClick" Margin="380,180,0,0" >ClickOutside</Button>
         </Canvas>
+
+        <RelativePanel Name="Desktop" Width="600" Height="600" Margin="620,200,0,0" Background="AliceBlue">
+            <RelativePanel Name="WorkspaceView" Width="300" Height="600" Margin="300,0,0,0" Background="Chartreuse">
+            </RelativePanel>
+            <RelativePanel Name="MultiDocView" Width="300" Height="600" Background="Beige">
+                <Canvas Name="LTMultiDocContainerView1" Width="300" Height="200" Background="Cyan">
+                </Canvas>
+                <Canvas Name="LTMultiDocContainerView" Width="300" Height="400" Margin="0,200,0,0" Background="Aquamarine">
+                    <RelativePanel Name="TitleBarPanel" Width="300" Height="50" Background="CadetBlue">
+                        <Button Name="TitleBarBtn" Width="250" Height="50" Background="Beige">title</Button>
+                        <Button Name="TitleBarCloseBtn" Width="50" Height="50" Margin="250,0,0,0" Background="LavenderBlush" Click="TitleBarCloseBtn_OnClick">X</Button>
+                    </RelativePanel>
+                </Canvas>
+            </RelativePanel>
+            <Canvas Name="LTInkMainManager" Width="600" Height="600" Margin="0,0,0,0">
+
+            </Canvas>
+        </RelativePanel>
     </Canvas>
 
 </Page>
