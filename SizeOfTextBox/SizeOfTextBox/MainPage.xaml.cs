@@ -54,7 +54,8 @@ namespace SizeOfTextBox
 				Background = new SolidColorBrush(Colors.Aqua),
 				BorderThickness = new Thickness(0),
 				AcceptsReturn = true,
-				AllowFocusWhenDisabled = false
+				AllowFocusWhenDisabled = false,
+				Style = Application.Current.Resources["LTRichEditBox"] as Style //new Style() "LTRichEditBox" // Style="{StaticResource LTRichEditBox}"
 			};
 			ScrollViewer.SetVerticalScrollBarVisibility(b, ScrollBarVisibility.Hidden);
 			ScrollViewer.SetHorizontalScrollBarVisibility(b, ScrollBarVisibility.Hidden);

@@ -22,5 +22,5 @@
         </TextBlock>
         <TextBlock Name="InitHeight" Margin="20,100,0,0"></TextBlock>
         <TextBlock Name="FinalHeight" Margin="20,200,0,0"></TextBlock>
-    </Canvas>
+        </Canvas>
 </Page>
