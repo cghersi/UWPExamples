@@ -114,6 +114,9 @@ void DrawingPanel::StartProcessingInput()
 
 		LogMessage("Event handlers registered");
 
+		// Make sure we Render at least one time, otherwise the input forwarding doesn't work:
+		Render();
+
         // Begin processing input messages as they're delivered.
         m_coreInput->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
     });
