@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="WebViewPrint.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WebViewPrint"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="500"/>
+            <RowDefinition Height="500"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"  Margin="20,0,20,0">
+            <WebView Name="WebPages" LoadCompleted="Web_LoadCompleted" Source="https://twitter.com"></WebView>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"  Margin="20,0,20,0">
+            <Canvas Name="PrintCanvas" ></Canvas>
+        </StackPanel>
+    </Grid>
+</Page>

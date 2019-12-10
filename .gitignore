@@ -36,6 +36,10 @@
 /InputManagerWithCoreIndependentInputSource/DirectXPanels/x64
 /InputManagerWithCoreIndependentInputSource/Debug
 /InputManagerWithCoreIndependentInputSource/x64
+/LuceneTest/.vs/LuceneTest/v15
+/LuceneTest/.vs/LuceneTest/v16
+/LuceneTest/LuceneTest/bin
+/LuceneTest/LuceneTest/obj
 /MeasureText/.vs/MeasureText/v15
 /MeasureText/.vs/MeasureText/v16
 /MeasureText/MeasureText/bin
@@ -81,3 +85,7 @@
 /SyncAntiPattern/.vs/SyncAntiPattern/v16
 /SyncAntiPattern/SyncAntiPattern/bin
 /SyncAntiPattern/SyncAntiPattern/obj
+/WebViewPrint/.vs/WebViewPrint/v15
+/WebViewPrint/.vs/WebViewPrint/v16
+/WebViewPrint/WebViewPrint/bin
+/WebViewPrint/WebViewPrint/obj
