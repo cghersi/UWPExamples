@@ -8,6 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Name="Results" Margin="100, 100, 0, 0" TextWrapping="WrapWholeWords" Width="800" Height="600">Hit Print to print the PDF</TextBlock>
         <Button Content="Print" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Print_Click" />
     </Grid>
 </Page>

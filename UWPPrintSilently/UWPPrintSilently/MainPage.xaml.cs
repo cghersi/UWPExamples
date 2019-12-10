@@ -18,12 +18,28 @@ namespace UWPPrintSilently
 
 		private async void Print_Click(object sender, RoutedEventArgs e)
 		{
-			StorageFile pdfToPrint = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///LiquidText.pdf", UriKind.RelativeOrAbsolute));
-			StorageFile tempCopy = await pdfToPrint.CopyAsync(ApplicationData.Current.LocalFolder, "Temp.pdf", NameCollisionOption.ReplaceExisting);
-			ApplicationData.Current.LocalSettings.Values["FileToPrint"] = tempCopy.Path;
-			if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+			try
 			{
-				await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+				StorageFile pdfToPrint =
+					await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///LiquidText.pdf",
+						UriKind.RelativeOrAbsolute));
+				StorageFile tempCopy = await pdfToPrint.CopyAsync(ApplicationData.Current.LocalFolder, "Temp.pdf",
+					NameCollisionOption.ReplaceExisting);
+				ApplicationData.Current.LocalSettings.Values["FileToPrint"] = tempCopy.Path;
+				if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent(
+					"Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+				{
+					await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+					Results.Text = "Printer invoked successfully!";
+				}
+				else
+				{
+					Results.Text = "FullTrustAppContract not present";
+				}
+			}
+			catch (Exception ex)
+			{
+				Results.Text = "Error: " + ex.Message + ";  " + ex.StackTrace;
 			}
 		}
 	}
