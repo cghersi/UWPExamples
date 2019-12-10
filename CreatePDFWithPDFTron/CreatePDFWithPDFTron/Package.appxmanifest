@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="59701887-14e7-43d7-8668-b4c484145ebd"
-    Publisher="CN=LiquidText"
-    Version="1.0.2.0" />
+    Name="e0b21d91-51c8-4fb2-bcbc-bf52575a91e0"
+    Publisher="CN=cgher"
+    Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="59701887-14e7-43d7-8668-b4c484145ebd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="e0b21d91-51c8-4fb2-bcbc-bf52575a91e0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>UWPPrintSilently</DisplayName>
-    <PublisherDisplayName>Tareq</PublisherDisplayName>
+    <DisplayName>CreatePDFWithPDFTron</DisplayName>
+    <PublisherDisplayName>cgher</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,24 +30,20 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="UWPPrintSilently.App">
+      EntryPoint="CreatePDFWithPDFTron.App">
       <uap:VisualElements
-        DisplayName="UWPPrintSilently"
+        DisplayName="CreatePDFWithPDFTron"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="UWPPrintSilently"
+        Description="CreatePDFWithPDFTron"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
-      <Extensions  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10">
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="Win32Printer.exe" />
-      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <Capability Name="internetClient" />
-    <rescap:Capability xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" Name="runFullTrust" />
   </Capabilities>
 </Package>
