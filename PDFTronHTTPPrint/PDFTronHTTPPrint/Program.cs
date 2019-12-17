@@ -13,7 +13,9 @@ namespace PDFTronHTTPPrint
 		public static void Main(string[] args)
 		{
 			string output_path = "../../../../html2pdf_example";
-			string host = "https://www.liquidtext.net/"; // "http://www.gutenberg.org/";
+			string host = "https://liquidtext.net"; 
+			//string host = "https://mail.google.com/mail/u/0/#inbox";
+			//string host = "http://www.gutenberg.org/";
 			string page0 = ""; //"wiki/Main_Page";
 			string page1 = "catalog/";
 			string page2 = "browse/recent/last1";
@@ -38,11 +40,18 @@ namespace PDFTronHTTPPrint
 
 					// create the HTML2PDF converter object and modify the output of the PDF pages
 					HTML2PDF converter = new HTML2PDF();
-					converter.SetImageQuality(25);
-					converter.SetPaperSize(PrinterMode.PaperSize.e_11x17);
+					converter.SetImageQuality(2000);
+					converter.SetPaperSize(PrinterMode.PaperSize.e_a4);
+					//converter.SetCookieJar();
 
 					// insert the web page to convert
-					converter.InsertFromURL(host + page0);
+					HTML2PDF.WebPageSettings settings = new HTML2PDF.WebPageSettings();
+					settings.SetAllowJavaScript(true);
+					settings.SetAllowPlugins(true);
+					settings.SetJavaScriptDelay(3000);
+					settings.SetLoadImages(true);
+
+					converter.InsertFromURL(host + page0, settings);
 
 					// convert the web page, appending generated PDF pages to doc
 					if (converter.Convert(doc))

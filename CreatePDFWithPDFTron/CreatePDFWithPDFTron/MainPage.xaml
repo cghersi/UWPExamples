@@ -10,6 +10,8 @@
 
     <Grid>
         <TextBlock Name="Results" Margin="100, 100">Generate PDF:</TextBlock>
-        <Button Click="ButtonBase_OnClick" Margin="100, 100">Create PDF</Button>
+        <Button Click="Create_OnClick" Margin="100, 100">Create PDF</Button>
+        <Button Click="Merge_OnClick" Margin="200, 100">Merge PDF</Button>
+        <Button Click="Rotate_OnClick" Margin="300, 100">Rotate PDF</Button>
     </Grid>
 </Page>
