@@ -93,9 +93,15 @@
 /SyncAntiPattern/.vs/SyncAntiPattern/v16
 /SyncAntiPattern/SyncAntiPattern/bin
 /SyncAntiPattern/SyncAntiPattern/obj
+/SyncFusionTest/.vs/SyncFusionTest/v15
+/SyncFusionTest/.vs/SyncFusionTest/v16
+/SyncFusionTest/bin
+/SyncFusionTest/obj
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v15
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v16
+/UWPConverterToPDF/UWPConverterToPDF/AppPackages
 /UWPConverterToPDF/UWPConverterToPDF/bin
+/UWPConverterToPDF/UWPConverterToPDF/BundleArtifacts
 /UWPConverterToPDF/UWPConverterToPDF/obj
 /UWPPrintSilently/.vs/UWPPrintSilently/v15
 /UWPPrintSilently/.vs/UWPPrintSilently/v16
