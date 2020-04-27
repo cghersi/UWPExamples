@@ -12,6 +12,7 @@ namespace FoxitTestBench
 {
 	public class TestBench
 	{
+		private TextPage[] m_foxitTextPages;
 		private PDFDoc m_doc;
 		private static readonly RectF EMPTY_RECT_FOR_HIGHLIGHTS = new RectF(0, 0, 1, 1);
 
@@ -101,6 +102,17 @@ namespace FoxitTestBench
 			return considerRotation ? rectRes.ApplyRotation(pageInfo.Rotation) : rectRes;
 		}
 
+		private TextPage GetTextPage(int page)
+		{
+			TextPage res = m_foxitTextPages[page];
+			if (res == null)
+			{
+				res = m_doc.GetTextPage(page);
+				m_foxitTextPages[page] = res;
+			}
+
+			return res;
+		}
 
 		public string LoadDocAndPrintPages(string pdfPath)
 		{
@@ -122,6 +134,9 @@ namespace FoxitTestBench
 			double originY3 = 0.7;
 			double h = 0.015;
 			SoftwareBitmap imagePage = null;
+			if (m_foxitTextPages == null)
+				m_foxitTextPages = new TextPage[pageCount];
+			List<Task> parallelTasks = new List<Task>();
 			for (int i = 0; i < pageCount; i++)
 			{
 				// add highlights:
@@ -144,10 +159,31 @@ namespace FoxitTestBench
 				//	Encoders.BuildLTRect(originX, i+originY3 + 2 * h + 0.002, size3, h)
 				//});
 
+				// Retrieve some glyph indexes (single thread):
+				for (int x = 10; x < 500; x += 50)
+				{
+					for (int y = 10; y < 500; y += 30)
+					{
+						hash += GetTextPage(i).GetIndexAtPos(x, y, 25);
+					}
+				}
+
+				// Retrieve some glyph indexes (parallel threads):
+				for (int x = 10; x < 500; x += 50)
+				{
+					for (int y = 10; y < 500; y += 30)
+					{
+						Task t = Task.Run(() => hash += GetTextPage(i).GetIndexAtPos(x, y, 25));
+						parallelTasks.Add(t);
+					}
+				}
+
 				imagePage = RenderPageSync(i, m_doc.GetPageInfo(i, pageCount).Rect.Size());
 				if (imagePage != null)
 					hash += imagePage.PixelHeight;
 			}
+
+			Task.WaitAll(parallelTasks.ToArray());
 			prof.CollectResults("RenderPage");
 
 			// Save the full page image on the file system:

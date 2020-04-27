@@ -353,6 +353,29 @@ namespace FoxitTestBench
 			}
 		}
 
+		public static int GetGlyphIndex(this TextPage textPage, LTPoint point, float pixelTolerance = 25)
+		{
+			if ((textPage == null) || textPage.IsEmpty())
+				return -1;
+			try
+			{
+				return textPage.GetIndexAtPos((float)point.X, (float)point.Y, pixelTolerance);
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("Cannot get glyph index due to {0}", e.Message);
+				return -1;
+			}
+		}
+
+		public static TextPage GetTextPage(this PDFDoc doc, int pag)
+		{
+			PDFPage page = doc.GetParsedPage(pag);
+			if (page == null)
+				return null;
+			return new TextPage(page, (int)TextParseFlags.e_ParseTextNormal);
+		}
+
 		public static LTSelResult GetTextRectsBySelection(this PDFDoc doc, int pag, LTPoint startPos, LTPoint endPos, float pixelTolerance = 5, bool wholeWords = false)
 		{
 			PDFPage page = doc.GetParsedPage(pag);
