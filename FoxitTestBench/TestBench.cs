@@ -12,7 +12,7 @@ namespace FoxitTestBench
 {
 	public class TestBench
 	{
-		private TextPage[] m_foxitTextPages;
+		private static TextPage[] s_foxitTextPages;
 		private PDFDoc m_doc;
 		private static readonly RectF EMPTY_RECT_FOR_HIGHLIGHTS = new RectF(0, 0, 1, 1);
 
@@ -104,11 +104,11 @@ namespace FoxitTestBench
 
 		private TextPage GetTextPage(int page)
 		{
-			TextPage res = m_foxitTextPages[page];
+			TextPage res = s_foxitTextPages[page];
 			if (res == null)
 			{
 				res = m_doc.GetTextPage(page);
-				m_foxitTextPages[page] = res;
+				s_foxitTextPages[page] = res;
 			}
 
 			return res;
@@ -134,8 +134,8 @@ namespace FoxitTestBench
 			double originY3 = 0.7;
 			double h = 0.015;
 			SoftwareBitmap imagePage = null;
-			if (m_foxitTextPages == null)
-				m_foxitTextPages = new TextPage[pageCount];
+			if (s_foxitTextPages == null)
+				s_foxitTextPages = new TextPage[pageCount];
 			List<Task> parallelTasks = new List<Task>();
 			for (int i = 0; i < pageCount; i++)
 			{
