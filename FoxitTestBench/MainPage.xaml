@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Canvas>
-        <Button x:Name="Generate" Margin="0, 100, 0, 0" Click="Generate_Click">Generate</Button>
+        <Button Margin="0, 50, 0, 0" Click="CopyFile_Click">1. CopyFiles</Button>
+        <Button Margin="0, 150, 0, 0" Click="Generate_Click">2. Run Test</Button>
         <TextBlock x:Name="Results" Margin="200, 100, 0, 0" Width="800" Height="800" TextWrapping="Wrap" MaxLines="200" IsTextSelectionEnabled="True">Results:</TextBlock>
     </Canvas>
 </Page>

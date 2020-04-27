@@ -28,7 +28,7 @@ namespace FoxitTestBench
 				return;
 		}
 
-		private async Task CopyFileIfNeeded(string fileName)
+		private static async Task CopyFileIfNeeded(string fileName)
 		{
 			if (File.Exists(ApplicationData.Current.LocalFolder.Path + "\\" + fileName))
 				return;
@@ -37,20 +37,19 @@ namespace FoxitTestBench
 				await file.CopyAsync(ApplicationData.Current.LocalFolder);
 		}
 
-		private async void Generate_Click(object sender, RoutedEventArgs e)
+		private void Generate_Click(object sender, RoutedEventArgs e)
 		{
-			await LoadDocAndPrintPages();
+			Test(new TestBench());
 		}
 
-		private async Task LoadDocAndPrintPages()
+		private async void CopyFile_Click(object sender, RoutedEventArgs e)
 		{
 			await CopyFileIfNeeded(SIMPLE_PDF_NAME);
-			await Test(new TestBench());
 		}
 
-		private async Task Test(TestBench bench)
+		private void Test(TestBench bench)
 		{
-			Results.Text += await bench.LoadDocAndPrintPages(SIMPLE_PDF);
+			Results.Text += bench.LoadDocAndPrintPages(SIMPLE_PDF);
 		}
 	}
 }

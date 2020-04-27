@@ -102,7 +102,7 @@ namespace FoxitTestBench
 		}
 
 
-		public async Task<string> LoadDocAndPrintPages(string pdfPath)
+		public string LoadDocAndPrintPages(string pdfPath)
 		{
 			LTProfiler prof = new LTProfiler("Foxit:" + pdfPath.Substring(pdfPath.Length - 10), LTProfilerLevel.High);
 
@@ -131,41 +131,41 @@ namespace FoxitTestBench
 					Encoders.BuildLTRect(originX, i+originY1 + h + 0.001, size1, h),
 					Encoders.BuildLTRect(originX, i+originY1 + 2 * h + 0.002, size1, h)
 				});
-				AddHighlight(i, new List<LTRect>
-				{
-					Encoders.BuildLTRect(originX, i+originY2, size2, h),
-					Encoders.BuildLTRect(originX, i+originY2 + h + 0.001, size2, h),
-					Encoders.BuildLTRect(originX, i+originY2 + 2 * h + 0.002, size2, h)
-				});
-				AddHighlight(i, new List<LTRect>
-				{
-					Encoders.BuildLTRect(originX, i+originY3, size3, h),
-					Encoders.BuildLTRect(originX, i+originY3 + h + 0.001, size3, h),
-					Encoders.BuildLTRect(originX, i+originY3 + 2 * h + 0.002, size3, h)
-				});
+				//AddHighlight(i, new List<LTRect>
+				//{
+				//	Encoders.BuildLTRect(originX, i+originY2, size2, h),
+				//	Encoders.BuildLTRect(originX, i+originY2 + h + 0.001, size2, h),
+				//	Encoders.BuildLTRect(originX, i+originY2 + 2 * h + 0.002, size2, h)
+				//});
+				//AddHighlight(i, new List<LTRect>
+				//{
+				//	Encoders.BuildLTRect(originX, i+originY3, size3, h),
+				//	Encoders.BuildLTRect(originX, i+originY3 + h + 0.001, size3, h),
+				//	Encoders.BuildLTRect(originX, i+originY3 + 2 * h + 0.002, size3, h)
+				//});
 
 				imagePage = RenderPageSync(i, m_doc.GetPageInfo(i, pageCount).Rect.Size());
 				if (imagePage != null)
 					hash += imagePage.PixelHeight;
 			}
-			prof.ReadTime("RenderPage");
+			prof.CollectResults("RenderPage");
 
 			// Save the full page image on the file system:
-			string createdFile = await SaveOnFileSystem(imagePage);
-			Debug.WriteLine("Create image for full page at {0}", createdFile);
-			prof.CollectResults("END");
+			SaveOnFileSystem(imagePage);
 
 			//Results.Text += "\nFile " + file.Path + " saved: \n" + prof.PrintResults();
-			return string.Format("\nFile loaded: pages={0}; hash={1}\n{2}\nImageCreated={3}", pageCount, hash,
-				prof.PrintResults(), createdFile);
+			return string.Format("\nFile loaded: pages={0}; hash={1}\n{2}", pageCount, hash,
+				prof.PrintResults());
 		}
 
-		private static async Task<string> SaveOnFileSystem(SoftwareBitmap imagePage)
+		private static async void SaveOnFileSystem(SoftwareBitmap imagePage)
 		{
 			byte[] imageBytes = await imagePage.ToByteArray(false);
 			StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Guid.NewGuid() + ".jpg", CreationCollisionOption.OpenIfExists);
 			await FileIO.WriteBytesAsync(file, imageBytes);
-			return file.Path;
+
+			Debug.WriteLine("Create image for full page at {0}", file.Path);
+			//return file.Path;
 		}
 	}
 }
