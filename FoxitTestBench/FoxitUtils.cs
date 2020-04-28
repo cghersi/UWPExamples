@@ -237,6 +237,76 @@ namespace FoxitTestBench
 		}
 
 		/// <summary>
+		/// Renders the given portion of the page of the given document, using the given resolution.
+		/// This method can be used if the action is invoked from a background thread (non-UI thread).
+		/// </summary>
+		/// <param name="doc"></param>
+		/// <param name="pag"></param>
+		/// <param name="regionToRender"></param>
+		/// <param name="targetSize"></param>
+		/// <param name="rawFormat"></param>
+		/// <returns></returns>
+		public static byte[] RenderTile(this PDFDoc doc, int pag, LTRect regionToRender, LTSize targetSize, bool rawFormat)
+		{
+			if ((doc == null) || (pag < 0) || targetSize.Equals(Encoders.SIZE_ZERO))
+				return null;
+
+			try
+			{
+				PDFPage page = doc.GetParsedPage(pag);
+				if (page == null)
+					return null;
+
+				int targetWd = (int)targetSize.Width;
+				int targetHt = (int)targetSize.Height;
+
+				Bitmap bitmap = new Bitmap(targetWd, targetHt, DIBFormat.e_DIBRgb32, null, 0);
+
+				// Set rect area and fill the color of bitmap:
+				RectI rect = new RectI(0, 0, targetWd, targetHt);
+				bitmap.FillRect(0xffffffff, rect);
+
+				// Get the page's matrix:
+				float pageWd_pdf = page.GetWidth();
+				float pageHt_pdf = page.GetHeight();
+				float sx = (targetWd * pageWd_pdf) / (float)regionToRender.W;
+				float sy = (targetHt * pageHt_pdf) / (float)regionToRender.H;
+				float px = -1 * (float)(regionToRender.X / pageWd_pdf) * sx;
+				float py = -1 * (float)(regionToRender.Y / pageHt_pdf) * sy;
+				Matrix2D mt = page.GetDisplayMatrix((int)px, (int)py, (int)sx, (int)sy, page.GetRotation());
+
+				// Create a renderer based on a given bitmap, and page will be rendered to this bitmap:
+				Renderer renderer = new Renderer(bitmap, false);
+				renderer.SetRenderContentFlags((int)(ContentFlag.e_RenderAnnot | ContentFlag.e_RenderPage));
+				bool bIsParsed = page.IsParsed();
+				if (!bIsParsed)
+					page.StartParse(0, null, false);
+
+				renderer.StartRender(page, mt, null);
+				if (rawFormat)
+				{
+					byte[] buffer = bitmap.GetBuffer();
+					return buffer;
+				}
+				else
+				{
+					foxit.common.Image image = new foxit.common.Image();
+					image.AddFrame(bitmap);
+					//FoxitStreamCallback fileStream = new FoxitStreamCallback();
+					//image.SaveAs(fileStream, "jpeg");
+					//return fileStream.toByteArray();
+					return null;
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("Cannot render page {0} due to {1}", pag, e.Message);
+				return null;
+			}
+		}
+
+
+		/// <summary>
 		/// Returns the size of the preview image of the document (i.e. of the first page of the doc).
 		/// </summary>
 		/// <param name="doc"></param>

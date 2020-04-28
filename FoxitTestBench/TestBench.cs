@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using foxit.common;
 using foxit.common.fxcrt;
 using foxit.pdf;
 using foxit.pdf.annots;
@@ -164,8 +165,30 @@ namespace FoxitTestBench
 				{
 					for (int y = 10; y < 500; y += 30)
 					{
-						hash += GetTextPage(i).GetIndexAtPos(x, y, 25);
+						int glyphIndex = GetTextPage(i).GetIndexAtPos(x, y, 25);
+						hash += glyphIndex;
 					}
+				}
+
+				// Retrieve some words (single thread):
+				try
+				{
+					for (int x = 10; x < 500; x += 50)
+					{
+						for (int y = 10; y < 500; y += 30)
+						{
+							Range r1 = GetTextPage(i).GetWordAtPos(x, y, 25);
+							if (r1.GetSegmentCount() > 0)
+							{
+								int glyphIndex = r1.GetSegmentStart(0);
+								hash += glyphIndex;
+							}
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					Debug.WriteLine("Cannot get words due to {0}", e.Message);
 				}
 
 				// Retrieve some glyph indexes (parallel threads):

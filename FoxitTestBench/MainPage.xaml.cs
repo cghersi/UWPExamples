@@ -18,6 +18,8 @@ namespace FoxitTestBench
 		private static readonly string SIMPLE_PDF_NAME = "ZZZ SimpleDoc.pdf";
 		private static readonly string SIMPLE_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + SIMPLE_PDF_NAME;
 
+		private static readonly string LOCKED_PDF_NAME = "ZZZ LockedDoc.pdf";
+		private static readonly string LOCKED_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + LOCKED_PDF_NAME;
 
 		public MainPage()
 		{
@@ -45,11 +47,13 @@ namespace FoxitTestBench
 		private async void CopyFile_Click(object sender, RoutedEventArgs e)
 		{
 			await CopyFileIfNeeded(SIMPLE_PDF_NAME);
+			await CopyFileIfNeeded(LOCKED_PDF_NAME);
 		}
 
 		private void Test(TestBench bench)
 		{
-			Results.Text += bench.LoadDocAndPrintPages(SIMPLE_PDF);
+			//Results.Text += bench.LoadDocAndPrintPages(SIMPLE_PDF);
+			Results.Text += bench.LoadDocAndPrintPages(LOCKED_PDF);
 		}
 	}
 }
