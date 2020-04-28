@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Encoders.cs" />
     <Compile Include="FoxitUtils.cs" />
+    <Compile Include="FoxitStreamCallback.cs" />
     <Compile Include="LTPDFPageInfo.cs" />
     <Compile Include="LTPoint.cs" />
     <Compile Include="LTProfiler.cs" />
