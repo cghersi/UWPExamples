@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="ExportPDFWithSyncFusion.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ExportPDFWithSyncFusion"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas>
+        <Button Margin="0, 50, 0, 0" Click="CopyFile_Click">1. CopyFiles</Button>
+        <Button Margin="0, 150, 0, 0" Click="Generate_Click">2. Export File</Button>
+        <TextBlock x:Name="Results" Margin="200, 100, 0, 0" Width="600" Height="800" TextWrapping="Wrap" MaxLines="200" IsTextSelectionEnabled="True">Results:</TextBlock>
+    </Canvas>
+</Page>
