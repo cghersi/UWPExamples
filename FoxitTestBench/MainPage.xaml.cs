@@ -15,6 +15,9 @@ namespace FoxitTestBench
 	/// </summary>
 	public sealed partial class MainPage : Page
 	{
+		private static readonly string WITH_LINK_PDF_NAME = "ZZZ PDFWithLink.pdf";
+		private static readonly string WITH_LINK_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + WITH_LINK_PDF_NAME;
+
 		private static readonly string SIMPLE_PDF_NAME = "ZZZ SimpleDoc.pdf";
 		private static readonly string SIMPLE_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + SIMPLE_PDF_NAME;
 
@@ -25,9 +28,9 @@ namespace FoxitTestBench
 		{
 			this.InitializeComponent();
 
-			ErrorCode error_code = Library.Initialize("okczsb6vTBZN2TNihqyqpwTvmqkgmJVTy+PRp9kcjCva3WBJ4gWcig==", "ezJvjl3GrGpz9JsXIVWofHd+ZehluFa6bsRqkkMKLapzBohxF3ZbZ2nKMbbZIA5S6NmZUvmZ/XALkjpytdB+RYTL4sVy0K1fLq/3/748yvi6ZNmXPXDEaWKcl0iTL9gI2Zj4amUFJHn744x42E4tett8Wi4uX5DsTRUjTRukQxpVIZOklPu/7E1fweEjCp7I83i24Y6z6cwFQMjnpElh+ARHvj93DYhEFolpW/TnX7ZaPsn0Xbgyo4kVLJJQXxEp7Qw8gMtVWudUc/ksNyFa9AGoscpFt/Ms2r1uId+9QsBj9dMaH4kckP2EF4jDC/+6nZFRy64TarhDfOAzcb3Q7ulgI0HiYQ6w4ITxZQM/yLnviAvtHkmb3vYJ6VfzSTz/pPT5vePdxW3O4KseqqwECVlWlN0EY2+I/kAlerUiNlvvykmQ7tFzzZccFg3tK6N1piFziBne9dDYoJUyy43N06oiQUkJtidZnkCWlgrdjVApGFhwNfJuqZP8mv4CyNrZ+ZIokok3PGeVTsaegyWNDshL0DmB0CorP2iTW/Li2vx26k0UKM8Om8CH/VhyusrHDhWqM69Dc1RLa1s92QdWXPeIDd92AY+UbPS3QhjWzMfCCgYa+kFZRPjhTeYX/6ZKdFjItYa+6DFA7B5+2fW4PZA1mguVR9MRhjZghZ3SvhF1u62TKV4mQFy6B13dSnvamjRC/gw1VXY/nXIEfgntt9U7aL4AxXo8ekmhg0F4rI0cek6s7n595FR2/+cBANIhqshzSRHdEhADERnQCpA1SnId+GieFLGWRex+/tKySC4m2aMqV/m7lB/oOWgSZXqa1o104/zbNxZjTWco4xjztArJt9aQmeQ8BABCBfqGOk/JVyXq8i++G2wzUZJf+L7Y9AGCs/H5QWeTxTyJ8izDZn21WSRiG6Meyku/WS/caQ1EilYkrpB+xAIeyDTz1gUqYPdI+QAjXZRXuDtrcaG4M2VrbrT9IYUf0k5o4vqvyENmXWTCewFpCM0aWA+y4wAIWhyeG9Jjrr8jAxfgBj8yPLO4W9Myt8PAQqAOzMVjkLTLyYk6UTjncmPVifbxrinTk2slRf8ELqtpeQLx8HDROO9P5ueTQlhTlBpEUAOr4ujHj8Xjb5H5Ea7YKtw9eHQNademwVOnHzVx8sOWWVHn6XpvqjXYMoCpsytcQbNXFILO8Nym5W1YmBX3QS3azaqkkWZMM8TNgrNHe7TQqEKgGC6JxVQsPSnfALjzIeSRi07gaQbkEAvxzI00PV8PxzSVsKsuKeNQMA==");
-			if (error_code != ErrorCode.e_ErrSuccess)
-				return;
+			ErrorCode ecCode = Library.Initialize("tbBasm2vcpttnM50+QcDo3lfx1dp83Vfc6pSXiumakBKvGxX6L8vHQ==", "ezJvj1/GvG539PvD3Z8X5uCMFXcWtIXHNyp0EUlUx+nSghquUN9LSQodcT71KeEfkxmkylLQy+gynfNUrM6+vZqPg8ShQLx8Xw5DGq/0TpOLhZ6fVWkAgqciqlhMIjIdaVBAuRphGRN4ghE2zUaLMeE9GvjeBMm2oIUlYxqTrGZ8RM3+oEQurX7O4D6lA2OzqHGByIJutoLAeI+yUL+bsMFx8bxh54Bgu3fzI0mpxMVA1az74U4t6kNcbz1slyg66YXDcyK2iuHu56tev8I5ce1D57bdQHdmX2t8MK4fiLDfAEIO7sVXU/13CMPNS01iHEtpfZzzkk19KfvZwpNylua9V5mij0F5UkUq/Bz9Nk5eX7z+TiHJQa+smggEl0GLkiDzm4lnQfTqOan5hrJsdtRxUqUE+pK+7qUwOHiLXUnyp1ShKNzuLV/63KLPMPLWCz3YGcibBkfFEfg7zFMs1w2eHoyLVd+UOeJXoQ5Af31rP1vF32mTR4EROA5MHZ5l2AUcxY1CLcfaFsNXL8ATDbv+vtALsvgj8xgoccX+ybKoILc1h5wZO/BE/eeOZS4uyedLETWM3qM1xFW0gTNKfpjAxJM3ypZyA/wAjhCEkH8z3a79mrWYxRIH0itcAtYlQCOITW9Ysdjlup46t+0Bf5OEV1mTvec/7ckMpq1Lo+cHDPEiepmtdvksHUbdU/Vbvs8D1U2eOLI4njvG6Ix0MPy4Up/fk+tkaGSLQOP32ONkfWMIih8+P7t4i7Ir0TVumaX37wjmV6TCdFVgxtvHCoKjXZJeBc/QwPInmT5yECJ3VMeD+gBgmUuJzluzFRJuFKDKUChFycmLKTrbJW3H1v8baurpal1ULbPwMXEMF5rqrJA2tCJ7ed2WMn3W+fqeJNfe64lKqbQFxoCl7C7BtOac6ehiwfvWIwAjom5lcuOndREF8KZRXeOqbawXmJRMViD58ajEupO3FYQaX71O2SCrThIjw+Vfd44+zcE8R0pWGRTyH4D1EqJcEr5xDT5zT8jbnzB/IroeDTZ/Udq2QTZNVuIlH+/5CIDNPyl7odeYo+93LJyxHI6pbdRHWdRQsi3X0R44qZEvYQfonF0aTR4koeyddF/3kyZhJSTykcBy9YJ7N/NA8h2B5WP+I7Plp98XRfM42V8sxhmhv7ME+SrPobVE16E1mpUWKekNEAfbzvZQcReJ3w==");
+			if (ecCode != ErrorCode.e_ErrSuccess)
+				throw new Exception("Invalid license");
 		}
 
 		private static async Task CopyFileIfNeeded(string fileName)
@@ -46,14 +49,16 @@ namespace FoxitTestBench
 
 		private async void CopyFile_Click(object sender, RoutedEventArgs e)
 		{
+			await CopyFileIfNeeded(WITH_LINK_PDF_NAME);
 			await CopyFileIfNeeded(SIMPLE_PDF_NAME);
 			await CopyFileIfNeeded(LOCKED_PDF_NAME);
 		}
 
 		private void Test(TestBench bench)
 		{
+			Results.Text += bench.LoadDocAndPrintPages(WITH_LINK_PDF);
 			//Results.Text += bench.LoadDocAndPrintPages(SIMPLE_PDF);
-			Results.Text += bench.LoadDocAndPrintPages(LOCKED_PDF);
+			//Results.Text += bench.LoadDocAndPrintPages(LOCKED_PDF);
 		}
 	}
 }

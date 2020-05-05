@@ -125,6 +125,26 @@ namespace FoxitTestBench
 			};
 		}
 
+		public static TextLink GetLinkAtPos(this TextPage textPage, int glyphIndex)
+		{
+			if ((textPage == null) || (glyphIndex < 0))
+				return null;
+			using (PageTextLinks pageTextLinks = new PageTextLinks(textPage))
+			{
+				int linkCount = pageTextLinks.GetTextLinkCount();
+				if (linkCount <= 0)
+					return null;
+				for (int i = 0; i < linkCount; i++)
+				{
+					TextLink link = pageTextLinks.GetTextLink(i);
+					if ((glyphIndex >= link.GetStartCharIndex()) && (glyphIndex <= link.GetEndCharIndex()))
+						return link;
+				}
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Renders the given page of the given document, using the given resolution.
 		/// This method can be used if the action is invoked from a background thread (non-UI thread).
@@ -292,10 +312,10 @@ namespace FoxitTestBench
 				{
 					foxit.common.Image image = new foxit.common.Image();
 					image.AddFrame(bitmap);
-					//FoxitStreamCallback fileStream = new FoxitStreamCallback();
-					//image.SaveAs(fileStream, "jpeg");
-					//return fileStream.toByteArray();
-					return null;
+					FoxitStreamCallback fileStream = new FoxitStreamCallback();
+					image.SaveAs(fileStream, "jpeg");
+					return fileStream.ToByteArray();
+					//return null;
 				}
 			}
 			catch (Exception e)

@@ -125,6 +125,15 @@ namespace FoxitTestBench
 			int pageCount = PageCount();
 			prof.ReadTime("PageCount");
 
+			if (s_foxitTextPages == null)
+				s_foxitTextPages = new TextPage[pageCount];
+
+			TextPage textPage = GetTextPage(0);
+			int glyphIndex = textPage.GetGlyphIndex(new LTPoint(100, 700), 25);
+			TextLink link = textPage.GetLinkAtPos(glyphIndex);
+			if (link != null)
+				Debug.WriteLine(link.GetURI());
+
 			int hash = 0;
 			double originX = 0.1;
 			double size1 = 0.5;
@@ -135,8 +144,7 @@ namespace FoxitTestBench
 			double originY3 = 0.7;
 			double h = 0.015;
 			SoftwareBitmap imagePage = null;
-			if (s_foxitTextPages == null)
-				s_foxitTextPages = new TextPage[pageCount];
+			byte[] tileBytes = null;
 			List<Task> parallelTasks = new List<Task>();
 			for (int i = 0; i < pageCount; i++)
 			{
@@ -160,57 +168,62 @@ namespace FoxitTestBench
 				//	Encoders.BuildLTRect(originX, i+originY3 + 2 * h + 0.002, size3, h)
 				//});
 
-				// Retrieve some glyph indexes (single thread):
-				for (int x = 10; x < 500; x += 50)
-				{
-					for (int y = 10; y < 500; y += 30)
-					{
-						int glyphIndex = GetTextPage(i).GetIndexAtPos(x, y, 25);
-						hash += glyphIndex;
-					}
-				}
+				//// Retrieve some glyph indexes (single thread):
+				//for (int x = 10; x < 500; x += 50)
+				//{
+				//	for (int y = 10; y < 500; y += 30)
+				//	{
+				//		int glyphIndex = GetTextPage(i).GetIndexAtPos(x, y, 25);
+				//		hash += glyphIndex;
+				//	}
+				//}
 
-				// Retrieve some words (single thread):
-				try
-				{
-					for (int x = 10; x < 500; x += 50)
-					{
-						for (int y = 10; y < 500; y += 30)
-						{
-							Range r1 = GetTextPage(i).GetWordAtPos(x, y, 25);
-							if (r1.GetSegmentCount() > 0)
-							{
-								int glyphIndex = r1.GetSegmentStart(0);
-								hash += glyphIndex;
-							}
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.WriteLine("Cannot get words due to {0}", e.Message);
-				}
+				//// Retrieve some words (single thread):
+				//try
+				//{
+				//	for (int x = 10; x < 500; x += 50)
+				//	{
+				//		for (int y = 10; y < 500; y += 30)
+				//		{
+				//			Range r1 = GetTextPage(i).GetWordAtPos(x, y, 25);
+				//			if (!r1.IsEmpty() && (r1.GetSegmentCount() > 0))
+				//			{
+				//				int glyphIndex = r1.GetSegmentStart(0);
+				//				hash += glyphIndex;
+				//			}
+				//		}
+				//	}
+				//}
+				//catch (Exception e)
+				//{
+				//	Debug.WriteLine("Cannot get words due to {0}", e.Message);
+				//}
 
-				// Retrieve some glyph indexes (parallel threads):
-				for (int x = 10; x < 500; x += 50)
-				{
-					for (int y = 10; y < 500; y += 30)
-					{
-						Task t = Task.Run(() => hash += GetTextPage(i).GetIndexAtPos(x, y, 25));
-						parallelTasks.Add(t);
-					}
-				}
+				//// Retrieve some glyph indexes (parallel threads):
+				//for (int x = 10; x < 500; x += 50)
+				//{
+				//	for (int y = 10; y < 500; y += 30)
+				//	{
+				//		Task t = Task.Run(() => hash += GetTextPage(i).GetIndexAtPos(x, y, 25));
+				//		parallelTasks.Add(t);
+				//	}
+				//}
 
-				imagePage = RenderPageSync(i, m_doc.GetPageInfo(i, pageCount).Rect.Size());
-				if (imagePage != null)
-					hash += imagePage.PixelHeight;
+				//imagePage = RenderPageSync(i, m_doc.GetPageInfo(i, pageCount).Rect.Size());
+				//if (imagePage != null)
+				//	hash += imagePage.PixelHeight;
+
+				tileBytes = m_doc.RenderTile(i, new LTRect(100, 100, 200, 200), new LTSize(100, 100), false);
+				if (tileBytes != null)
+					hash += tileBytes.Length;
 			}
 
 			Task.WaitAll(parallelTasks.ToArray());
 			prof.CollectResults("RenderPage");
 
 			// Save the full page image on the file system:
-			SaveOnFileSystem(imagePage);
+			//SaveOnFileSystem(imagePage);
+			SaveOnFileSystem(tileBytes);
 
 			//Results.Text += "\nFile " + file.Path + " saved: \n" + prof.PrintResults();
 			return string.Format("\nFile loaded: pages={0}; hash={1}\n{2}", pageCount, hash,
@@ -220,6 +233,15 @@ namespace FoxitTestBench
 		private static async void SaveOnFileSystem(SoftwareBitmap imagePage)
 		{
 			byte[] imageBytes = await imagePage.ToByteArray(false);
+			StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Guid.NewGuid() + ".jpg", CreationCollisionOption.OpenIfExists);
+			await FileIO.WriteBytesAsync(file, imageBytes);
+
+			Debug.WriteLine("Create image for full page at {0}", file.Path);
+			//return file.Path;
+		}
+
+		private static async void SaveOnFileSystem(byte[] imageBytes)
+		{
 			StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(Guid.NewGuid() + ".jpg", CreationCollisionOption.OpenIfExists);
 			await FileIO.WriteBytesAsync(file, imageBytes);
 
