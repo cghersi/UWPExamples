@@ -15,6 +15,8 @@ using foxit.pdf.actions;
 using foxit.pdf.annots;
 using DateTime = System.DateTime;
 using System.Diagnostics;
+using Type = foxit.pdf.actions.Type;
+
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 
@@ -125,7 +127,7 @@ namespace FoxitTestBench
 			};
 		}
 
-		public static TextLink GetLinkAtPos(this TextPage textPage, int glyphIndex)
+		public static string GetURLLinkAtPos(this TextPage textPage, int glyphIndex)
 		{
 			if ((textPage == null) || (glyphIndex < 0))
 				return null;
@@ -138,11 +140,35 @@ namespace FoxitTestBench
 				{
 					TextLink link = pageTextLinks.GetTextLink(i);
 					if ((glyphIndex >= link.GetStartCharIndex()) && (glyphIndex <= link.GetEndCharIndex()))
-						return link;
+						return link.GetURI();
 				}
 			}
 
 			return null;
+		}
+
+		public static int GetPagePointedToLinkAtPos(this PDFPage pdfPage, LTPoint point, float tolerance = 25)
+		{
+			if (pdfPage == null)
+				return -1;
+
+			int annotCount = pdfPage.GetAnnotCount();
+			if (annotCount <= 0)
+				return -1;
+			Annot a = pdfPage.GetAnnotAtPoint(new PointF((float)point.X, (float)point.Y), tolerance);
+			if ((a != null) && !a.IsEmpty() && (a.GetType() == AnnotType.e_Link))
+			{
+				Link l = new Link(a);
+				foxit.pdf.actions.Action action = l.GetAction();
+				if ((action != null) && !action.IsEmpty() && (action.GetType() == Type.e_TypeGoto))
+				{
+					Destination dest = new GotoAction(action).GetDestination();
+					if ((dest != null) && !dest.IsEmpty())
+						return dest.GetPageIndex(pdfPage.GetDocument());
+				}
+			}
+
+			return -1;
 		}
 
 		/// <summary>
@@ -457,6 +483,62 @@ namespace FoxitTestBench
 				return -1;
 			}
 		}
+
+		public static LTRect GetRectOfGlyph(this TextPage textPage, int glyphIndex)
+		{
+			if ((textPage == null) || (glyphIndex < 0))
+				return Encoders.RECT_ZERO;
+
+			try
+			{
+				// this call is needed to make the GetTextRect() work!!
+				textPage.GetCharCount();
+
+				int count = textPage.GetTextRectCount(glyphIndex, 1);
+				if (count > 0)
+				{
+					RectF rectF = textPage.GetTextRect(0);
+					return IsNullOrEmpty(rectF) ? Encoders.RECT_ZERO : ToRect(rectF);
+				}
+			}
+			catch (Exception)
+			{
+				return Encoders.RECT_ZERO;
+			}
+
+			return Encoders.RECT_ZERO;
+		}
+
+		public static LTRect[] GetRectsOfGlyphForPage(this TextPage textPage)
+		{
+			if (textPage == null)
+				return null;
+
+			try
+			{
+				int totChars = textPage.GetCharCount();
+
+				LTRect[] res = new LTRect[totChars];
+				for (int glyphIndex = 0; glyphIndex < totChars; glyphIndex++)
+				{
+					int count = textPage.GetTextRectCount(glyphIndex, 1);
+					if (count > 0)
+					{
+						RectF rectF = textPage.GetTextRect(0);
+						res[glyphIndex] = IsNullOrEmpty(rectF) ? Encoders.RECT_ZERO : ToRect(rectF);
+					}
+					else
+						res[glyphIndex] = Encoders.RECT_ZERO;
+				}
+
+				return res;
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
+
 
 		public static TextPage GetTextPage(this PDFDoc doc, int pag)
 		{

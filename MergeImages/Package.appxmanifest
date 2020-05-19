@@ -7,14 +7,14 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="ff293cba-0c3a-403a-b831-cc090cdd577c"
-    Publisher="CN=5EF3AD65-B441-4ABF-9A00-F1613D138727"
-    Version="1.0.1.0" />
+    Name="49f6caaf-9162-4d7c-ac09-32f96b7fccd9"
+    Publisher="CN=cgher"
+    Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="ff293cba-0c3a-403a-b831-cc090cdd577c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="49f6caaf-9162-4d7c-ac09-32f96b7fccd9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>FoxitTestBench</DisplayName>
+    <DisplayName>MergeImages</DisplayName>
     <PublisherDisplayName>cgher</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="FoxitTestBench.App">
+      EntryPoint="MergeImages.App">
       <uap:VisualElements
-        DisplayName="FoxitTestBench"
+        DisplayName="MergeImages"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="FoxitTestBench"
+        Description="MergeImages"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

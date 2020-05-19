@@ -1,0 +1,3 @@
+MainPackage=C:\LiquidText\MinComplVerExamples\FoxitTestBench\bin\ARM64\Release\FoxitTestBench_1.0.1.0_ARM64.msix
+SymbolPackage=C:\LiquidText\MinComplVerExamples\FoxitTestBench\obj\ARM64\Release\Symbols\FoxitTestBench_1.0.1.0_ARM64.appxsym
+ResourcePack=C:\LiquidText\MinComplVerExamples\FoxitTestBench\bin\ARM64\Release\FoxitTestBench_1.0.1.0_language-en.msix

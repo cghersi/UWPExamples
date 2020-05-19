@@ -15,6 +15,18 @@ namespace FoxitTestBench
 	/// </summary>
 	public sealed partial class MainPage : Page
 	{
+		private static readonly string EASY_PDF_NAME = "ZZZ easyPdf.pdf";
+		private static readonly string EASY_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + EASY_PDF_NAME;
+
+		private static readonly string LONG_TIME_TO_SELECT_PDF_NAME = "ZZZ ValleyBrookPost.pdf";
+		private static readonly string LONG_TIME_TO_SELECT_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + LONG_TIME_TO_SELECT_PDF_NAME;
+
+		private static readonly string WITH_COMMENTS_PDF_NAME = "ZZZ PDF-Comments-Test.pdf";
+		private static readonly string WITH_COMMENTS_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + WITH_COMMENTS_PDF_NAME;
+
+		private static readonly string WITH_INTERNAL_LINK_PDF_NAME = "ZZZ pdfWithInternalLink.pdf";
+		private static readonly string WITH_INTERNAL_LINK_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + WITH_INTERNAL_LINK_PDF_NAME;
+
 		private static readonly string WITH_LINK_PDF_NAME = "ZZZ PDFWithLink.pdf";
 		private static readonly string WITH_LINK_PDF = ApplicationData.Current.LocalFolder.Path + "\\" + WITH_LINK_PDF_NAME;
 
@@ -28,7 +40,7 @@ namespace FoxitTestBench
 		{
 			this.InitializeComponent();
 
-			ErrorCode ecCode = Library.Initialize("tbBasm2vcpttnM50+QcDo3lfx1dp83Vfc6pSXiumakBKvGxX6L8vHQ==", "ezJvj1/GvG539PvD3Z8X5uCMFXcWtIXHNyp0EUlUx+nSghquUN9LSQodcT71KeEfkxmkylLQy+gynfNUrM6+vZqPg8ShQLx8Xw5DGq/0TpOLhZ6fVWkAgqciqlhMIjIdaVBAuRphGRN4ghE2zUaLMeE9GvjeBMm2oIUlYxqTrGZ8RM3+oEQurX7O4D6lA2OzqHGByIJutoLAeI+yUL+bsMFx8bxh54Bgu3fzI0mpxMVA1az74U4t6kNcbz1slyg66YXDcyK2iuHu56tev8I5ce1D57bdQHdmX2t8MK4fiLDfAEIO7sVXU/13CMPNS01iHEtpfZzzkk19KfvZwpNylua9V5mij0F5UkUq/Bz9Nk5eX7z+TiHJQa+smggEl0GLkiDzm4lnQfTqOan5hrJsdtRxUqUE+pK+7qUwOHiLXUnyp1ShKNzuLV/63KLPMPLWCz3YGcibBkfFEfg7zFMs1w2eHoyLVd+UOeJXoQ5Af31rP1vF32mTR4EROA5MHZ5l2AUcxY1CLcfaFsNXL8ATDbv+vtALsvgj8xgoccX+ybKoILc1h5wZO/BE/eeOZS4uyedLETWM3qM1xFW0gTNKfpjAxJM3ypZyA/wAjhCEkH8z3a79mrWYxRIH0itcAtYlQCOITW9Ysdjlup46t+0Bf5OEV1mTvec/7ckMpq1Lo+cHDPEiepmtdvksHUbdU/Vbvs8D1U2eOLI4njvG6Ix0MPy4Up/fk+tkaGSLQOP32ONkfWMIih8+P7t4i7Ir0TVumaX37wjmV6TCdFVgxtvHCoKjXZJeBc/QwPInmT5yECJ3VMeD+gBgmUuJzluzFRJuFKDKUChFycmLKTrbJW3H1v8baurpal1ULbPwMXEMF5rqrJA2tCJ7ed2WMn3W+fqeJNfe64lKqbQFxoCl7C7BtOac6ehiwfvWIwAjom5lcuOndREF8KZRXeOqbawXmJRMViD58ajEupO3FYQaX71O2SCrThIjw+Vfd44+zcE8R0pWGRTyH4D1EqJcEr5xDT5zT8jbnzB/IroeDTZ/Udq2QTZNVuIlH+/5CIDNPyl7odeYo+93LJyxHI6pbdRHWdRQsi3X0R44qZEvYQfonF0aTR4koeyddF/3kyZhJSTykcBy9YJ7N/NA8h2B5WP+I7Plp98XRfM42V8sxhmhv7ME+SrPobVE16E1mpUWKekNEAfbzvZQcReJ3w==");
+			ErrorCode ecCode = Library.Initialize("d3BGIHODAZqhtJqM49Ewv8LfTj5z29EusrHZe6o8ZJsuSYMv6GRA+A==", "ezJvj0kmtBh3VNviuesJQSIdTAq2tIXH52fZJYImDXHXheEP9ItFUNqlI4KToRW4etV0U2mXW8L7EQ5/pYwISdx3XvqPwfRHT8Xstds4ndTN1BCUX0jgfQiTYWn4p15GPc+StIbZSGwfCjp83KeIB3NGTizYSkI8E4K1Z+MoH2xKR5DKZowxHHSAVQRT5to8WZJFP0d1cgpHxGb42vswGODC1EgEiravWEXIpD4Z4tcK175sxMtiJ1fLDJZ2znv4/PjC6mdwiI0DUIsFvLSUWnF4uj0h5WfMDsEoAA2pykrYMkaryjmjLfEBblyYS2pj8IdHKXN5b0B4fOV+kXx4Vtw08IyMX6SgFeD9SLDaHYDZjcwpf3feaBdSOm7s3iUWCnbsO3uAYkgxlkFBu3tcQpLbZUvRB8O+9oVuJmQ+FM0InnchfFlpJ/lHUX6y2Oz/00HYEFY4o9IL5pWVqrvdrmvAwC6w9y+mYXRjBh3ii9j1mNDyH2H5eXctbNrkEN52d5DfOV28kueTyjVP100hjv/LOvrzt5O+ApD2NIf7xFr8xxQPYfcQKyt2BnkIEFlKSTl6FInDR3go/48ZPIGMTYza5BHlNLE/4h/DK5dxleQQnJ9Wwl+f2tbK/gSEstmCfvMJf4QzLI2UxIc/ivS5HSzGvcu4NZZnWkuLVxSGJFX/7SgfsFAwpXx87w+yiwoX7TSevU3E1VTqkDTpF2Jr/jX8W5nQMvlLp5DZWkPBrB3GFjIwIaRgR0hpT5Qfihf/mpIr+3j3tAkdemGXOZ21zbL9O8Qm1G4nDxou+kzDpWTvv3mDltPOwBdQjgDOYb4ZfwD845SFcASqpWiF2Jyr+Lr4G7Zf8hwZuVsAV+XNRSO0dvPdsTAKRxp2EZ/tUUKwyOMQh5EpfP6lbJl8C+LY7/PN1rX5f4S2Oqi0d+jYBWywebseLCh19aSgat3EGbsNrwmuQhrtLj27FaMxoIUqn+gfiNFYPd3/h8oJ47Cp4Enbm9IkR9008I24+gjbhn+88j2plgCno4xmbb4imvbFiuJkU9c5BGfSvcm9wIyNXo58bYFvbqSGGK2JS6ZkQBCXSuhTdpSsQyhDfbrXw32W+4PkPCYG9XKPx9dqbgL58Mxw60AfUP5pEGYoMOoIUi5MQh7jmtWg2d4W+a3AzHfeZSHm0oLWfZtZ1AWExosPEfWoyhR4JvVedC1rcpm4za9KgstDeA==");
 			if (ecCode != ErrorCode.e_ErrSuccess)
 				throw new Exception("Invalid license");
 		}
@@ -49,14 +61,22 @@ namespace FoxitTestBench
 
 		private async void CopyFile_Click(object sender, RoutedEventArgs e)
 		{
+			await CopyFileIfNeeded(EASY_PDF_NAME);
+			await CopyFileIfNeeded(LONG_TIME_TO_SELECT_PDF_NAME);
+			await CopyFileIfNeeded(WITH_COMMENTS_PDF_NAME);
 			await CopyFileIfNeeded(WITH_LINK_PDF_NAME);
+			await CopyFileIfNeeded(WITH_INTERNAL_LINK_PDF_NAME);
 			await CopyFileIfNeeded(SIMPLE_PDF_NAME);
 			await CopyFileIfNeeded(LOCKED_PDF_NAME);
 		}
 
 		private void Test(TestBench bench)
 		{
-			Results.Text += bench.LoadDocAndPrintPages(WITH_LINK_PDF);
+			Results.Text += bench.LoadDocAndPrintPages(EASY_PDF);
+			Results.Text += bench.LoadDocAndPrintPages(LONG_TIME_TO_SELECT_PDF);
+			//Results.Text += bench.LoadDocAndPrintPages(WITH_COMMENTS_PDF);
+			//Results.Text += bench.LoadDocAndPrintPages(WITH_INTERNAL_LINK_PDF);
+			//Results.Text += bench.LoadDocAndPrintPages(WITH_LINK_PDF);
 			//Results.Text += bench.LoadDocAndPrintPages(SIMPLE_PDF);
 			//Results.Text += bench.LoadDocAndPrintPages(LOCKED_PDF);
 		}

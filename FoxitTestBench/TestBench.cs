@@ -14,6 +14,7 @@ namespace FoxitTestBench
 	public class TestBench
 	{
 		private static TextPage[] s_foxitTextPages;
+		private static PDFPage[] s_foxitPdfPages;
 		private PDFDoc m_doc;
 		private static readonly RectF EMPTY_RECT_FOR_HIGHLIGHTS = new RectF(0, 0, 1, 1);
 
@@ -115,6 +116,18 @@ namespace FoxitTestBench
 			return res;
 		}
 
+		private PDFPage GetPdfPage(int page)
+		{
+			PDFPage res = s_foxitPdfPages[page];
+			if (res == null)
+			{
+				res = m_doc.GetParsedPage(page);
+				s_foxitPdfPages[page] = res;
+			}
+
+			return res;
+		}
+
 		public string LoadDocAndPrintPages(string pdfPath)
 		{
 			LTProfiler prof = new LTProfiler("Foxit:" + pdfPath.Substring(pdfPath.Length - 10), LTProfilerLevel.High);
@@ -127,14 +140,74 @@ namespace FoxitTestBench
 
 			if (s_foxitTextPages == null)
 				s_foxitTextPages = new TextPage[pageCount];
+			if (s_foxitPdfPages == null)
+				s_foxitPdfPages = new PDFPage[pageCount];
+			prof.ReadTime("ArraysOfPages");
+
+			//// Slow GetGlyphIndex:
+			int hash = 0;
+			int totCalls = 0;
+			for (int i = 0; i < pageCount; i++)
+			{
+				PDFPage page = GetPdfPage(i);
+				TextPage textP = GetTextPage(i);
+				for (int x = 0; x < page.GetWidth(); x += 250)
+				{
+					for (int y = 0; y < page.GetHeight(); y += 150)
+					{
+						int idx = textP.GetGlyphIndex(new LTPoint(x, y), 25);
+						totCalls++;
+						hash += idx;
+					}
+				}
+			}
+
+			//prof.ReadTime("GetGlyphIndex [" + totCalls + "]");
+
+			// GetRectsOfGlyphForPage:
+			//totCalls = 0;
+			for (int i = 0; i < pageCount; i++)
+			{
+				TextPage textP = GetTextPage(i);
+				LTRect[] res = textP.GetRectsOfGlyphForPage();
+				hash += res.Length;
+			}
+
+			prof.ReadTime("GetRectsOfGlyphForPage [" + pageCount + " pages]");
+
+			// Check the highlights and comments:
+			PDFPage page0 = GetPdfPage(0);
+			int annotCount = page0.GetAnnotCount();
+			for (int i = 0; i < annotCount; i++)
+			{
+				Annot a = page0.GetAnnot(i);
+				if (a.GetType() == AnnotType.e_Popup)
+				{
+					Popup popup = new Popup(a);
+					string content = popup.GetContent();
+					Debug.WriteLine(content);
+				}
+				else if (a.GetType() == AnnotType.e_Highlight)
+				{
+					Highlight highlight = new Highlight(a);
+					string content = highlight.GetContent();
+					Debug.WriteLine(content);
+				}
+			}
 
 			TextPage textPage = GetTextPage(0);
 			int glyphIndex = textPage.GetGlyphIndex(new LTPoint(100, 700), 25);
-			TextLink link = textPage.GetLinkAtPos(glyphIndex);
-			if (link != null)
-				Debug.WriteLine(link.GetURI());
+			string url = textPage.GetURLLinkAtPos(glyphIndex);
+			if (url != null)
+				Debug.WriteLine(url);
 
-			int hash = 0;
+			if (pageCount >= 2)
+			{
+				PDFPage pdfPage = GetPdfPage(1);
+				int pageIndex = pdfPage.GetPagePointedToLinkAtPos(new LTPoint(100, 500), 25);
+				Debug.WriteLine("Page linked is {0}", pageIndex);
+			}
+
 			double originX = 0.1;
 			double size1 = 0.5;
 			double size2 = 0.6;
@@ -218,12 +291,11 @@ namespace FoxitTestBench
 					hash += tileBytes.Length;
 			}
 
-			Task.WaitAll(parallelTasks.ToArray());
+			//Task.WaitAll(parallelTasks.ToArray());
 			prof.CollectResults("RenderPage");
 
 			// Save the full page image on the file system:
-			//SaveOnFileSystem(imagePage);
-			SaveOnFileSystem(tileBytes);
+			//SaveOnFileSystem(tileBytes);
 
 			//Results.Text += "\nFile " + file.Path + " saved: \n" + prof.PrintResults();
 			return string.Format("\nFile loaded: pages={0}; hash={1}\n{2}", pageCount, hash,
