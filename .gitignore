@@ -34,6 +34,7 @@
 /ExtendIOSConcepts/ExtendIOSConcepts/obj
 /FoxitTestBench/.vs/FoxitTestBench/v15
 /FoxitTestBench/.vs/FoxitTestBench/v16
+/FoxitTestBench/AppPackages
 /FoxitTestBench/bin
 /FoxitTestBench/obj
 /ImageBrushes/.vs/ImageBrushes/v15
@@ -56,6 +57,10 @@
 /MeasureText/.vs/MeasureText/v16
 /MeasureText/MeasureText/bin
 /MeasureText/MeasureText/obj
+/MergeImages/.vs/MergeImages/v15
+/MergeImages/.vs/MergeImages/v16
+/MergeImages/bin
+/MergeImages/obj
 /MousePointerCaption/.vs/MousePointerCaption/v15
 /MousePointerCaption/.vs/MousePointerCaption/v16
 /MousePointerCaption/MousePointerCaption/bin
@@ -105,6 +110,10 @@
 /SyncFusionTest/.vs/SyncFusionTest/v16
 /SyncFusionTest/bin
 /SyncFusionTest/obj
+/TestARM64/.vs/TestARM64/v15
+/TestARM64/.vs/TestARM64/v16
+/TestARM64/bin
+/TestARM64/obj
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v15
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v16
 /UWPConverterToPDF/UWPConverterToPDF/AppPackages

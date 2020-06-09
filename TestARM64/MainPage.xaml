@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="TestARM64.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestARM64"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas>
+        <Button Click="GoodClick" Margin="100, 100, 0, 0">Good Action</Button>
+        <Button Click="BadClick" Margin="100, 200, 0, 0">Bad Action</Button>
+        <TextBlock Name="Results" Margin="300, 100, 0, 0">Result of the click: </TextBlock>
+    </Canvas>
+</Page>
