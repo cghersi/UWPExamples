@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="TestStorageAccess.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestStorageAccess"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas>
+        <TextBlock Margin="30,10,0,0">1. Click on the Button "Pick File" and choose a file in C:\ drive</TextBlock>
+        <Button Name="PickFile" Margin="30,50,0,0" Click="PickFile_OnClick">Pick File</Button>
+        <TextBlock Name="Results" Margin="200,50,0,0"></TextBlock>
+
+        <TextBlock Margin="30,150,0,0">2. Close the App</TextBlock>
+
+        <TextBlock Margin="30,250,0,0">3. Reopen the app and click on Button "Write on Saved File" to write the string "OK" onto the file chosen at step (1)</TextBlock>
+        <Button Name="WriteFile" Margin="30,300,0,0" Click="WriteFile_OnClick">Write on Saved File</Button>
+        <TextBlock Name="ResultsWrite" Margin="300,200,0,0"></TextBlock>
+    </Canvas>
+</Page>

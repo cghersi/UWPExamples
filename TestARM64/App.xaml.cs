@@ -22,11 +22,26 @@ namespace TestARM64
 			// Enable crash reports:
 
 			LogifyAlert client = LogifyAlert.Instance;
-			client.ApiKey = "<MyApiKey>";
-			client.StartExceptionsHandling();
+			client.ApiKey = "9F2AF2D36BA94A009D4F7544F269FB9B";
+			////
+			//client.StartExceptionsHandling();
+			//handled only
+
+			//AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException; ;
+			//         System.Threading.Tasks.TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
 			this.InitializeComponent();
 			this.Suspending += OnSuspending;
+		}
+
+		private void TaskScheduler_UnobservedTaskException(object sender, System.Threading.Tasks.UnobservedTaskExceptionEventArgs e)
+		{
+
+		}
+
+		private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+		{
+
 		}
 
 		/// <summary>

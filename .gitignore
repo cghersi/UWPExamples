@@ -1,3 +1,4 @@
+/bin
 /ClippedCanvas/.vs/ClippedCanvas/v15
 /ClippedCanvas/.vs/ClippedCanvas/v16
 /ClippedCanvas/ClippedCanvas/AppPackages
@@ -78,6 +79,10 @@
 /MultiplyAlphaBlending/.vs/MultiplyAlphaBlending/v16
 /MultiplyAlphaBlending/MultiplyAlphaBlending/bin
 /MultiplyAlphaBlending/MultiplyAlphaBlending/obj
+/PenButtonListener/.vs/PenButtonListener/v15
+/PenButtonListener/.vs/PenButtonListener/v16
+/PenButtonListener/bin
+/PenButtonListener/obj
 /PDFTronHTTPPrint/.vs/PDFTronHTTPPrint/v15
 /PDFTronHTTPPrint/.vs/PDFTronHTTPPrint/v16
 /PDFTronHTTPPrint/PDFTronHTTPPrint/bin
@@ -117,7 +122,14 @@
 /TestARM64/.vs/TestARM64/v15
 /TestARM64/.vs/TestARM64/v16
 /TestARM64/bin
+/TestARM64/BundleArtifacts
+/TestARM64/Logify.Alert.Core/obj
+/TestARM64/Logify.Alert.UWP/obj
 /TestARM64/obj
+/TestStorageAccess/.vs/TestStorageAccess/v15
+/TestStorageAccess/.vs/TestStorageAccess/v16
+/TestStorageAccess/bin
+/TestStorageAccess/obj
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v15
 /UWPConverterToPDF/.vs/UWPConverterToPDF/v16
 /UWPConverterToPDF/UWPConverterToPDF/AppPackages

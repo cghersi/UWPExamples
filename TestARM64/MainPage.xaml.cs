@@ -1,5 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using DevExpress.Logify.UWP;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,7 +25,17 @@ namespace TestARM64
 		{
 			int a = 0;
 			int b = 8;
-			int c = b / a; // should throw exception
+			//int c = b / a; // should throw exception
+
+			for (int i = 0; i < 1000; i++)
+			{
+				//i.e.
+				//you have a local scope Exception object
+				//send it to Logify like:
+				LogifyAlert.Instance.Send(new System.Exception());
+			}
+
+
 
 			Results.Text += " OK also Bad ";
 		}
