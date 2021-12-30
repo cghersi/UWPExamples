@@ -1,3 +1,6 @@
+/AForgeTest/.vs
+/AForgeTest/bin
+/AForgeTest/obj
 /bin
 /ClippedCanvas/.vs/ClippedCanvas/v15
 /ClippedCanvas/.vs/ClippedCanvas/v16
@@ -107,6 +110,9 @@
 /RichText/.vs/RichText/v16
 /RichText/RichText/bin
 /RichText/RichText/obj
+/SimpleImageComparisonTest/.vs
+/SimpleImageComparisonTest/bin
+/SimpleImageComparisonTest/obj
 /SizeOfTextBox/.vs/SizeOfTextBox/v15
 /SizeOfTextBox/.vs/SizeOfTextBox/v16
 /SizeOfTextBox/SizeOfTextBox/bin
