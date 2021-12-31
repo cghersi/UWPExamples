@@ -49,24 +49,24 @@ namespace SimpleImageComparisonClassLibrary
 
     #region Methods
 
-    /// <summary>
-    /// Calculates the values in the histogram
-    /// </summary>
-    public static async Task<Histogram> CalculateHistogram(WriteableBitmap bitmap)
-    {
-      Histogram histogram = new Histogram();
-      WriteableBitmap newBmp = await bitmap.GetResizedVersion(16, 16);
+    ///// <summary>
+    ///// Calculates the values in the histogram
+    ///// </summary>
+    //public static async Task<Histogram> CalculateHistogram(WriteableBitmap bitmap)
+    //{
+    //  Histogram histogram = new Histogram();
+    //  WriteableBitmap newBmp = await bitmap.GetResizedVersion(16, 16);
 
-      byte[] pixels = newBmp.PixelBuffer.ToArray();
-      for (int x = 0; x < pixels.Length; x += 4)
-      {
-        histogram.Red[pixels[x]]++;
-        histogram.Green[pixels[x + 1]]++;
-        histogram.Blue[pixels[x + 2]]++;
-      }
+    //  byte[] pixels = newBmp.PixelBuffer.ToArray();
+    //  for (int x = 0; x < pixels.Length; x += 4)
+    //  {
+    //    histogram.Red[pixels[x]]++;
+    //    histogram.Green[pixels[x + 1]]++;
+    //    histogram.Blue[pixels[x + 2]]++;
+    //  }
 
-      return histogram;
-    }
+    //  return histogram;
+    //}
 
 
     ///// <summary>

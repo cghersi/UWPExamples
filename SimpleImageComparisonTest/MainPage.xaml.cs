@@ -36,6 +36,8 @@ namespace SimpleImageComparisonTest
 
       StringBuilder sb = new StringBuilder();
       Stopwatch sw = Stopwatch.StartNew();
+
+      int tolerance = 1;
       try
       {
         for (int pagA = 0; pagA < 9; pagA++)
@@ -50,7 +52,7 @@ namespace SimpleImageComparisonTest
             string file1 = string.Format("docA_pag{0}.jpg", pagA);
             string file2 = string.Format("docB_pag{0}.jpg", pagB);
             //float sim = ComputeSimilarity(@"C:\Share\TestVision\" + file1, @"C:\Share\TestVision\" + file2);
-            float diff = await GetDiff(file1, file2);
+            float diff = await GetDiff(file1, file2, tolerance);
             //float diff = SimpleImageComparisonClassLibrary.ImageTool.GetPercentageDifference(@"C:\Share\TestVision\" + file1, @"C:\Share\TestVision\" + file2);
             sb.AppendFormat("doc A pag {0} vs doc B pag {1} = {2}", pagA, pagB, diff);
             //if (maxSimilarity < sim)
@@ -79,7 +81,7 @@ namespace SimpleImageComparisonTest
         sw.Stop();
 
         
-        File.WriteAllText(ApplicationData.Current.LocalFolder.Path + "\\res.txt", sb.ToString());
+        File.WriteAllText(ApplicationData.Current.LocalFolder.Path + "\\res_threshold" + tolerance + ".txt", sb.ToString());
       }
       catch (Exception e)
       {
@@ -89,16 +91,16 @@ namespace SimpleImageComparisonTest
       Console.WriteLine("finished in {0}ms", sw.ElapsedMilliseconds);
     }
 
-    private static async Task<float> GetDiff(string file1, string file2)
+    private static async Task<float> GetDiff(string file1, string file2, int tolerance)
     {
       try
       {
         WriteableBitmap img1 = await OpenWriteableBitmapFile(file1);
         WriteableBitmap img2 = await OpenWriteableBitmapFile(file2);
-        float diff = await ImageMethods.GetPercentageDifference(img1, img2);
+        float diff = await ImageMethods.GetPercentageDifference(img1, img2, tolerance);
         return diff;
       }
-      catch (Exception)
+      catch (Exception e)
       {
         return -1;
       }

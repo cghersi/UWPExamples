@@ -16,8 +16,8 @@ namespace SimpleImageComparisonClassLibrary
         
         #region Variables and properties
 
-        private byte[,] _grayValues;
-        public byte[,] GrayValues { 
+        private byte[] _grayValues;
+        public byte[] GrayValues { 
             get => _grayValues; 
             private set { _grayValues = value; CalculateAverageBrightness(); } 
         }
@@ -63,9 +63,8 @@ namespace SimpleImageComparisonClassLibrary
 
         public override int GetHashCode()
         {
-            var values = GrayValues.All();
-            int hashCode = values.Count();
-            foreach (int value in values)
+            int hashCode = GrayValues.Count();
+            foreach (int value in GrayValues)
             {
                 hashCode = unchecked(hashCode * 314159 + value);
             }

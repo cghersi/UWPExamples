@@ -39,22 +39,19 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
             }
         }
 
-        public static float GetAverage(this byte[,] doubleArray)
+        public static float GetAverage(this byte[] doubleArray)
         {
-            return (float) doubleArray.All().ToList().Average(item => item);
+            return (float) doubleArray.Average(item => item);
         }
 
 
-        public static byte[,] GetDifferences(this byte[,] firstGray, byte[,] secondGray)
+        public static byte[] GetDifferences(this byte[] firstGray, byte[] secondGray)
         {
-            byte[,] differences = new byte[firstGray.GetLength(0), firstGray.GetLength(1)];
+            byte[] differences = new byte[firstGray.Length];
 
-            for (int y = 0; y < firstGray.GetLength(1); y++)
+            for (int y = 0; y < firstGray.Length; y++)
             {
-                for (int x = 0; x < firstGray.GetLength(0); x++)
-                {
-                    differences[x, y] = (byte)Math.Abs(firstGray[x, y] - secondGray[x, y]);
-                }
+                    differences[y] = (byte)Math.Abs(firstGray[y] - secondGray[y]);
             }
             return differences;
         }

@@ -72,7 +72,7 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
       await i1.Init(img1);
       ImageInfo i2 = new ImageInfo();
       await i2.Init(img2);
-      return GetPercentageDifference(i1, i2);
+      return GetPercentageDifference(i1, i2, threshold);
     }
 
     /// <summary>
@@ -84,9 +84,9 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
     /// <returns>The difference between the two images as a percentage</returns>
     public static float GetPercentageDifference(this ImageInfo img1, ImageInfo img2, int threshold = 3)
     {
-      byte[,] differences = img1.GrayValues.GetDifferences(img2.GrayValues);
-      int numberOfPixels = differences.GetLength(0) * differences.GetLength(1);
-      float diffPixels = differences.All().Count(b => b > threshold);
+      byte[] differences = img1.GrayValues.GetDifferences(img2.GrayValues);
+      int numberOfPixels = differences.Length;
+      float diffPixels = differences.Count(b => b > threshold);
       return diffPixels / numberOfPixels;
     }
 
@@ -109,7 +109,7 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
     /// <param name="imageInfo1">The first ImageInfo</param>
     /// <param name="imageInfo2">The ImageInfo to compare with</param>
     /// <returns>the differences between the two imageinfos as a doublearray</returns>
-    public static byte[,] GetDifferences(this ImageInfo imageInfo1, ImageInfo imageInfo2)
+    public static byte[] GetDifferences(this ImageInfo imageInfo1, ImageInfo imageInfo2)
     {
       return imageInfo1.GrayValues.GetDifferences(imageInfo2.GrayValues);
     }
@@ -203,23 +203,10 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
     /// </summary>
     /// <param name="img">The image to get the lightness for</param>
     /// <returns>A doublearray (16x16) containing the lightness of the 256 sections</returns>
-    public static async Task<byte[,]> GetGrayScaleValues(this WriteableBitmap img, uint arraySize = 16)
+    public static async Task<byte[]> GetGrayScaleValues(this WriteableBitmap img, uint arraySize = 16)
     {
-      WriteableBitmap resized = await img.GetResizedVersion(arraySize, arraySize);
-      WriteableBitmap thisOne = await resized.GetGrayScaleVersion();
-      byte[,] grayScale = new byte[arraySize, arraySize];
-
-      byte[] pixels = thisOne.PixelBuffer.ToArray();
-      int idx = 0;
-      for (int y = 0; y < arraySize; y++)
-      {
-        for (int x = 0; x < arraySize; x++)
-        {
-          grayScale[x, y] = (byte)Math.Abs(pixels[idx]); //   thisOne.GetPixel(x, y).R);
-          idx += 4;
-        }
-      }
-      return grayScale;
+      byte[] resized = await img.GetResizedVersion(arraySize, arraySize);
+      return resized.GetGrayScaleVersion();
     }
 
     #region Image conversion methods
@@ -253,21 +240,22 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
 
     //}
 
-    public static async Task<WriteableBitmap> GetGrayScaleVersion(this WriteableBitmap srcBitmap)
+    public static byte[] GetGrayScaleVersion(this byte[] srcPixels, uint arraySize = 16)
     {
-      // Get the source bitmap pixels
-      byte[] srcPixels = new byte[4 * srcBitmap.PixelWidth * srcBitmap.PixelHeight];
+      //// Get the source bitmap pixels
+      //byte[] srcPixels = new byte[4 * srcBitmap.PixelWidth * srcBitmap.PixelHeight];
 
-      using (Stream pixelStream = srcBitmap.PixelBuffer.AsStream())
-      {
-        await pixelStream.ReadAsync(srcPixels, 0, srcPixels.Length);
-      }
+      //using (Stream pixelStream = srcBitmap.PixelBuffer.AsStream())
+      //{
+      //  await pixelStream.ReadAsync(srcPixels, 0, srcPixels.Length);
+      //}
 
       // Create a destination bitmap and pixels array
-      WriteableBitmap dstBitmap = new WriteableBitmap(srcBitmap.PixelWidth, srcBitmap.PixelHeight);
-      byte[] dstPixels = new byte[4 * dstBitmap.PixelWidth * dstBitmap.PixelHeight];
+      //WriteableBitmap dstBitmap = new WriteableBitmap(srcBitmap.PixelWidth, srcBitmap.PixelHeight);
+      //byte[] dstPixels = new byte[4 * dstBitmap.PixelWidth * dstBitmap.PixelHeight];
 
-
+      byte[] res = new byte[arraySize * arraySize];
+      int resIdx = 0;
       for (int i = 0; i < srcPixels.Length; i += 4)
       {
         double b = (double)srcPixels[i] / 255.0;
@@ -276,26 +264,29 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
 
         byte a = srcPixels[i + 3];
 
-        double e = (0.21 * r + 0.71 * g + 0.07 * b) * 255;
+        double e = (0.3 * r + 0.59 * g + 0.11 * b) * 255;
+        //double e = (0.21 * r + 0.71 * g + 0.07 * b) * 255;
         byte f = Convert.ToByte(e);
 
-        dstPixels[i] = f;
-        dstPixels[i + 1] = f;
-        dstPixels[i + 2] = f;
-        dstPixels[i + 3] = a;
+        res[resIdx++] = f;
+        //dstPixels[i] = f;
+        //dstPixels[i + 1] = f;
+        //dstPixels[i + 2] = f;
+        //dstPixels[i + 3] = a;
       }
+      return res;
 
-      // Move the pixels into the destination bitmap
-      using (Stream pixelStream = dstBitmap.PixelBuffer.AsStream())
-      {
-        await pixelStream.WriteAsync(dstPixels, 0, dstPixels.Length);
-      }
-      dstBitmap.Invalidate();
+      //// Move the pixels into the destination bitmap
+      //using (Stream pixelStream = dstBitmap.PixelBuffer.AsStream())
+      //{
+      //  await pixelStream.WriteAsync(dstPixels, 0, dstPixels.Length);
+      //}
+      //dstBitmap.Invalidate();
 
-      return dstBitmap;
+      //return dstBitmap;
     }
 
-    public static async Task<WriteableBitmap> GetResizedVersion(this WriteableBitmap baseWriteBitmap, uint width, uint height)
+    public static async Task<byte[]> GetResizedVersion(this WriteableBitmap baseWriteBitmap, uint width, uint height)
     {
       // Get the pixel buffer of the writable bitmap in bytes
       Stream stream = baseWriteBitmap.PixelBuffer.AsStream();
@@ -322,18 +313,19 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
               ExifOrientationMode.IgnoreExifOrientation,
               ColorManagementMode.DoNotColorManage);
       // An array containing the decoded image data
-      var sourceDecodedPixels = pixelData.DetachPixelData();
-      // Approach 1 : Encoding the image buffer again:
-      // Encoding data
-      var inMemoryRandomStream2 = new InMemoryRandomAccessStream();
-      var encoder2 = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, inMemoryRandomStream2);
-      encoder2.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, width, height, 96, 96, sourceDecodedPixels);
-      await encoder2.FlushAsync();
-      inMemoryRandomStream2.Seek(0);
-      // finally the resized writablebitmap
-      var bitmap = new WriteableBitmap((int)width, (int)height);
-      await bitmap.SetSourceAsync(inMemoryRandomStream2);
-      return bitmap;
+      byte[] sourceDecodedPixels = pixelData.DetachPixelData();
+      return sourceDecodedPixels;
+      //// Approach 1 : Encoding the image buffer again:
+      //// Encoding data
+      //var bitmap = new WriteableBitmap((int)width, (int)height);
+      //using (var memStream = new MemoryStream(sourceDecodedPixels))
+      //{
+      //  using (Stream streamOut = bitmap.PixelBuffer.AsStream())
+      //  {
+      //    await memStream.CopyToAsync(stream);
+      //  }
+      //}
+      //return bitmap;
     }
 
     ///// <summary>
@@ -381,15 +373,15 @@ namespace SimpleImageComparisonClassLibrary.ExtensionMethods
     //        return (await GetRgbHistogram(bitmap)).Visualize();
     //    }
 
-    /// <summary>
-    /// Get a histogram for a bitmap
-    /// </summary>
-    /// <param name="bitmap">The bitmap to get the histogram for</param>
-    /// <returns>A histogram for the bitmap</returns>
-    public static async Task<Histogram> GetRgbHistogram(this WriteableBitmap bitmap)
-    {
-      return await Histogram.CalculateHistogram(bitmap);
-    }
+    ///// <summary>
+    ///// Get a histogram for a bitmap
+    ///// </summary>
+    ///// <param name="bitmap">The bitmap to get the histogram for</param>
+    ///// <returns>A histogram for the bitmap</returns>
+    //public static async Task<Histogram> GetRgbHistogram(this WriteableBitmap bitmap)
+    //{
+    //  return await Histogram.CalculateHistogram(bitmap);
+    //}
     #endregion
 
 
